@@ -6,4 +6,10 @@ export const Colors = {
     shadowColor: "#9c9c9c",
     background: "#FFF",
     border: "#e0e0e0",
+
+    // Estados
+    success: "#1cbd47",
+    error: "#d92525",
+    warning: "#faac25",
+    info: "#1c8ac8",
 }

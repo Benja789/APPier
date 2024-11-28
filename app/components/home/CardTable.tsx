@@ -3,13 +3,12 @@ import { BaseStyles } from "../../styles/BaseStyles";
 import { CardTableStyle } from "../../styles/components/CardTableStyle";
 
 interface ICardTableProps {
-    title: string;
-    available: boolean;
+    table: any;
     callBack: () => void;
 }
 
 const CardTable = ( props: ICardTableProps ) => {
-    const { title, callBack, available } = props
+    const { table, callBack } = props
     return (
         <TouchableOpacity onPress={callBack}>
             <View style={[ BaseStyles.cardContainer, CardTableStyle.container, BaseStyles.shadow ]}>
@@ -20,12 +19,12 @@ const CardTable = ( props: ICardTableProps ) => {
                             source={require("../../assets/icons/restaurante.png")}/>
                         <View>
                             <View style={ CardTableStyle.titleHeader }>
-                                <View style={[ CardTableStyle.viewContainer, ( available ? CardTableStyle.viewAvailable : CardTableStyle.viewOcuped ) ]}/>
+                                <View style={[ CardTableStyle.viewContainer, ( table?.available ? CardTableStyle.viewAvailable : CardTableStyle.viewOcuped ) ]}/>
                                 <View>
                                     <Text style={[BaseStyles.textTitleH2, { padding: 0, margin: 0 }]}>
-                                        { title }
+                                        { table.title ?? "-" }
                                     </Text>
-                                    <Text style={[BaseStyles.textP, ( available ? CardTableStyle.textAvailable : CardTableStyle.textOcuped ) ]}>
+                                    <Text style={[BaseStyles.textP, ( table?.available ? CardTableStyle.textAvailable : CardTableStyle.textOcuped ) ]}>
                                         Disponible
                                     </Text>
                                 </View>

@@ -1,9 +1,8 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import SignIn from '../pages/auth/SignIn';
-import { AuthStackParamList } from '../interfaces/IRouter';
 
 
-const AuthStack = createNativeStackNavigator<AuthStackParamList>();
+const AuthStack = createNativeStackNavigator<any>();
 
 const AuthRouter = () => {
 	const baseOptions = {

@@ -1,10 +1,8 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import Home from '../pages/home/Home';
 import ListTable from '../pages/home/ListTable';
-import { HomeStackParamList } from '../interfaces/IRouter';
+import ListDishes from '../pages/home/ListDishes';
 
-
-const AuthStack = createNativeStackNavigator<HomeStackParamList>();
+const AuthStack = createNativeStackNavigator<any>();
 
 const HomeRouter = () => {
     const baseOptions = {
@@ -14,7 +12,7 @@ const HomeRouter = () => {
     return (
         <AuthStack.Navigator initialRouteName='ListTable'>
             <AuthStack.Screen name="ListTable" component={ListTable} options={baseOptions} />
-            <AuthStack.Screen name="Index" component={Home} options={baseOptions} />
+            <AuthStack.Screen name="ListDishes" component={ListDishes} options={baseOptions} />
         </AuthStack.Navigator>
     )
 }

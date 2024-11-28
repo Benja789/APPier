@@ -1,6 +1,8 @@
+import { useContext } from "react";
 import { Text, View, TextInput, Image } from "react-native"
-import { useNavigation } from "@react-navigation/native";
+import { CommonActions, useNavigation } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context"
+import { AppContextProvider, IContext } from "../../interfaces/IAppContext";
 
 // Componentes
 import Button from "../../components/Base/Button";
@@ -12,9 +14,24 @@ import { SignInStyle } from "../../styles/pages/SignInStyle";
 
 const SignIn = () => {
     const navigation = useNavigation<any>();
+    const appContext =  useContext(AppContextProvider);
 
     const loginApp = () => {
-        navigation.navigate('Home', { screen: 'ListTable' });
+        navigation.dispatch(
+            CommonActions.reset({
+                index: 0,
+                routes: [{
+                    name: 'Home',
+                    state: {
+                        routes: [
+                            {
+                                name: 'ListTable',
+                            }
+                        ]
+                    }
+                }],
+            })
+        );
     }
     return (
         <SafeAreaView style={[ BaseStyles.safeArea ]}>
@@ -22,7 +39,7 @@ const SignIn = () => {
                 <Image 
                     style={[ SignInStyle.iconLogo ]}
                     source={require("../../assets/img/White-Circle-Legends.png")}/>
-                <View style={[ BaseStyles.cardContainer, SignInStyle.formsCode ]}>
+                <View style={[ BaseStyles.cardContainer, SignInStyle.formsCode, BaseStyles.shadow ]}>
                     <View style={[BaseStyles.cardContent ]}>
                         <Text style={[BaseStyles.textTitleH1, SignInStyle.text ]}>
                             Ingresa tu código
@@ -46,7 +63,7 @@ const SignIn = () => {
                         styleAnswer={{ textAlign: 'center' }}
                         styleButton={{ textAlign: 'center' }}/>
                     <Text style={[ BaseStyles.textP, { textAlign: 'center' }]}>
-                        The TecWave
+                        TecWave - { appContext.settings.appVersion }
                     </Text>
                 </View>
             </View>

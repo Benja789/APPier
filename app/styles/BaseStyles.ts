@@ -12,8 +12,12 @@ export const BaseStyles = StyleSheet.create({
         fontSize: 20,
     },
 
+    textTitleH3: {
+        fontFamily: 'Poppins-Bold',
+        fontSize: 16,
+    },
     textP:{
-        fontFamily: 'Poppins',
+        fontFamily: 'Poppins-Regular',
         fontSize: 16
     },
 

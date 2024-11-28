@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+import { Colors } from "../Colors";
 
 export const CardTableStyle = StyleSheet.create({
     icon: {
@@ -38,22 +39,22 @@ export const CardTableStyle = StyleSheet.create({
         borderRadius: 50,
     },
     viewAvailable: {
-        backgroundColor: 'green',
+        backgroundColor: Colors.success,
         color: ''
     },
 
     viewOcuped: {
-        backgroundColor: 'red',
+        backgroundColor: Colors.error,
         color: '',
         padding: 0,
         margin: 0
     },
 
     textAvailable: {
-        color: 'green',
+        color: Colors.success,
     },
     textOcuped: {
-        color: 'red',
+        color: Colors.error,
     }
 
 })
