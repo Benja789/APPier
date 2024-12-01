@@ -1,4 +1,4 @@
-import { Text, View } from "react-native"
+import { FlatList, ScrollView, Text, View } from "react-native"
 import { useNavigation } from "@react-navigation/native"
 
 // Estilos
@@ -6,12 +6,44 @@ import { BaseStyles } from "../../styles/BaseStyles"
 import { SafeAreaView } from "react-native-safe-area-context"
 import { ListDishesStyles } from "../../styles/pages/ListDishesStyles"
 import OrderDetails from "../../components/home/OrdersDetails"
-import { useEffect, useContext } from "react"
+import { useEffect, useContext, useRef, useState } from "react"
 import { AppContextProvider, IOrder } from "../../interfaces/IAppContext"
+import CardTypeDish from "../../components/home/CardTypeDish"
+
+
+const TypeDishes = [
+    {
+        id: "entrance",
+        name: "Entradas",
+        icon: require("../../assets/icons/entrance.png"),
+    },{
+        id: "main",
+        name: "Platos fuertes",
+        icon: require("../../assets/icons/dish.png"),
+    },{
+        id: "dessert",
+        name: "Postres",
+        icon: require("../../assets/icons/desserts.png"),
+    },{
+        id: "drink",
+        name: "Bebidas",
+        icon: require("../../assets/icons/drinks.png"),
+    },{
+        id: "extra",
+        name: "Extras",
+        icon: require("../../assets/icons/extras.png"),
+    },{
+        id: "alls",
+        name: "Todos",
+        icon: require("../../assets/icons/alls.png"),
+    }
+]
 
 const ListDishes = () => {
     const navigation = useNavigation<any>()
     const appContext = useContext(AppContextProvider)
+    const ref = useRef<any>(null)
+    const [typeDishSelected, setTypeDishSelected] = useState("entrance")
 
     useEffect(()=> {
         getData()
@@ -92,7 +124,11 @@ const ListDishes = () => {
 
             return order
         })
+    }
 
+    const handleChangeTypeDish = (id: string) => {
+        setTypeDishSelected(id)
+        // ref.current.scrollToIndex({index: 0})
     }
 
     return( 
@@ -100,7 +136,18 @@ const ListDishes = () => {
             <View style={[ ListDishesStyles.container ]}>
                 {/* Secciones de dishes */}
                 <View style={[ ListDishesStyles.dishesContainer ]}>
-                    <Text>Dishes</Text>
+                    <FlatList 
+                        ref={ref}
+                        data={TypeDishes}
+                        style={{ paddingHorizontal: 30, paddingVertical: 10}}
+                        horizontal
+                        renderItem={({item}) => <CardTypeDish {...item} dishSelected={typeDishSelected} callBack={handleChangeTypeDish}/>}
+                        showsHorizontalScrollIndicator={false}
+                        keyExtractor={(item:any) => `${item.id}`} 
+                    />
+                    <ScrollView>
+
+                    </ScrollView>
                 </View>
 
                 {/* Seccion del total de la orden */}
