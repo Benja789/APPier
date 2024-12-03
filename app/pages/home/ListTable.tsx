@@ -102,10 +102,6 @@ const ListTable = () => {
     return (
         <SafeAreaView style={[ BaseStyles.safeArea ]}>
             <View style={[ BaseStyles.body ]}>
-                <AppBar 
-                    title="Selecciona la mesa"
-                    showReports={true}
-                    showLogout={true}/>
                 <ScrollView>
                     {
                         TablesExample.map((item, index) => (

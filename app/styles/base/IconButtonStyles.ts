@@ -2,8 +2,8 @@ import { StyleSheet } from "react-native";
 
 export const IconButtonStyle = StyleSheet.create({
     icon: {
-        width: 30,
-        height: 30,
+        width: 24,
+        height: 24,
     },
     button: {
         borderRadius: 50,

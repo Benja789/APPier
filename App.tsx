@@ -7,16 +7,19 @@ import AuthRouter from './app/routes/AuthRouter';
 import HomeRouter from './app/routes/HomeRouter';
 import AppContext from './app/context/AppContex';
 import { StatusBar } from 'react-native';
+import AppBar from './app/components/Base/AppBar';
 
 const Stack = createNativeStackNavigator();
 
 const App = () => {
 	const baseOptions = {
-		headerShown: false
+		headerShown: false,
+		// title: "Ejemplo",
+		// header: (props:any) => <AppBar title='Ejemplo' showReports={false} showLogout={true}/>
 	};
 	return (
 		<AppContext>
-            <StatusBar backgroundColor="#FFF" barStyle="dark-content" />
+            <StatusBar animated={false} backgroundColor="#FFF" barStyle="dark-content" />
 			<NavigationContainer>
 				<Stack.Navigator initialRouteName="Auth">
 					<Stack.Screen name="Auth" component={AuthRouter} options={baseOptions}/>

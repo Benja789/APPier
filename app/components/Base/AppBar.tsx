@@ -12,11 +12,12 @@ interface IAppBar {
     title: string
     showReports: boolean
     showLogout: boolean
+    showMenu: boolean
     children?: any  
 }
 
 const AppBar = ( props: IAppBar ) => {
-    const { title, showReports, showLogout, children } = props
+    const { title, showReports, showLogout, showMenu, children } = props
 
     const navigate = useNavigation<any>()
     const logout = () => {
@@ -31,24 +32,36 @@ const AppBar = ( props: IAppBar ) => {
     }
 
     return (
-        <>
+        <View style={AppbarStyles.content}>
             <View style={[ AppbarStyles.title ]}>
                 <Text style={[BaseStyles.textTitleH1, AppbarStyles.text ]}>
                     { title }
                 </Text>
                 <View style={AppbarStyles.containerIcon }>
-                    <IconButton 
-                        callBack={()=>{}}
-                        icon={require("../../assets/icons/reporte-de-negocios.png")}/>
-                    <IconButton
-                        callBack={logout}
-                        icon={require("../../assets/icons/logout.png")}/>
+                    {
+                        showReports &&
+                            <IconButton 
+                                callBack={()=>{}}
+                                icon={require("../../assets/icons/reporte-de-negocios.png")}/>
+                    }
+                    {
+                        showLogout &&
+                            <IconButton
+                                callBack={logout}
+                                icon={require("../../assets/icons/logout.png")}/>
+                    }
+                    {
+                        showMenu &&
+                            <IconButton
+                                callBack={logout}
+                                icon={require("../../assets/icons/burger-bar.png")}/>
+                    }
                 </View>
             </View>
              { children }
 
             <View style={BaseStyles.divider}/>
-        </>
+        </View>
     )
 }
 

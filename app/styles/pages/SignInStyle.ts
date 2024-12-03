@@ -28,10 +28,11 @@ export const SignInStyle = StyleSheet.create({
     footer: {
         justifyContent: 'center', 
         alignItems: 'center', 
-        position: 'absolute',
+        position: 'static',
         left: 0,
         right: 0,
-        bottom: 40,
-        marginHorizontal: 'auto'
+        bottom: 0,
+        marginTop: 120,
+        marginHorizontal: 'auto',
     }
 })

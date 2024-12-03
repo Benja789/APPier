@@ -1,4 +1,4 @@
-import { FlatList, ScrollView, Text, View } from "react-native"
+import { FlatList, ScrollView, View } from "react-native"
 import { useNavigation } from "@react-navigation/native"
 
 // Estilos
@@ -9,6 +9,7 @@ import OrderDetails from "../../components/home/OrdersDetails"
 import { useEffect, useContext, useRef, useState } from "react"
 import { AppContextProvider, IOrder } from "../../interfaces/IAppContext"
 import CardTypeDish from "../../components/home/CardTypeDish"
+import Button from "../../components/Base/Button"
 
 
 const TypeDishes = [
@@ -35,7 +36,7 @@ const TypeDishes = [
     },{
         id: "alls",
         name: "Todos",
-        icon: require("../../assets/icons/alls.png"),
+        icon: require("../../assets/icons/tool.png"),
     }
 ]
 
@@ -146,6 +147,7 @@ const ListDishes = () => {
                         keyExtractor={(item:any) => `${item.id}`} 
                     />
                     <ScrollView>
+                    <Button text="Abrir menu" callBack={() => navigation.openDrawer()} ></Button>
 
                     </ScrollView>
                 </View>
