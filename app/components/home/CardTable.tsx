@@ -19,18 +19,18 @@ const CardTable = ( props: ICardTableProps ) => {
                             source={require("../../assets/icons/restaurante.png")}/>
                         <View>
                             <View style={ CardTableStyle.titleHeader }>
-                                <View style={[ CardTableStyle.viewContainer, ( table?.available ? CardTableStyle.viewAvailable : CardTableStyle.viewOcuped ) ]}/>
+                                <View style={[ CardTableStyle.viewContainer, ( table?.enabled ? CardTableStyle.viewAvailable : CardTableStyle.viewOcuped ) ]}/>
                                 <View>
                                     <Text style={[BaseStyles.textTitleH2, { padding: 0, margin: 0 }]}>
-                                        { table.title ?? "-" }
+                                        Mesa { table.tableNumber ?? "-" }
                                     </Text>
-                                    <Text style={[BaseStyles.textP, ( table?.available ? CardTableStyle.textAvailable : CardTableStyle.textOcuped ) ]}>
-                                        Disponible
+                                    <Text style={[BaseStyles.textP, ( table?.enabled ? CardTableStyle.textAvailable : CardTableStyle.textOcuped ) ]}>
+                                        { table?.labelStatus ?? "-" }
                                     </Text>
                                 </View>
                             </View>
                             <Text style={[BaseStyles.textP, { textAlign: 'center' }]}>
-                                Mesa para 4 personas
+                                Mesa para { table?.numberSeats ?? 1 } personas
                             </Text>
                         </View>
                     </View>

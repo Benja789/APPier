@@ -9,6 +9,7 @@ import AppContext from './app/context/AppContex';
 import { StatusBar } from 'react-native';
 import AppBar from './app/components/Base/AppBar';
 
+
 const Stack = createNativeStackNavigator();
 
 const App = () => {

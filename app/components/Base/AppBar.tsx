@@ -1,5 +1,5 @@
 import { Text, View } from "react-native"
-import { CommonActions, useNavigation } from "@react-navigation/native"
+import { CommonActions, DrawerActions, useNavigation } from "@react-navigation/native"
 
 // Componentes
 import IconButton from "../../components/Base/IconButton"
@@ -31,6 +31,12 @@ const AppBar = ( props: IAppBar ) => {
         )
     }
 
+    const showDrawer = () => {
+        navigate.dispatch(
+            DrawerActions.toggleDrawer()
+        )
+    }
+
     return (
         <View style={AppbarStyles.content}>
             <View style={[ AppbarStyles.title ]}>
@@ -53,7 +59,7 @@ const AppBar = ( props: IAppBar ) => {
                     {
                         showMenu &&
                             <IconButton
-                                callBack={logout}
+                                callBack={showDrawer}
                                 icon={require("../../assets/icons/burger-bar.png")}/>
                     }
                 </View>

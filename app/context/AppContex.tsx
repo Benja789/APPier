@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { AppContextProvider, IModalNotification, IOrder, ISettings, ISnackNotification, IUser } from "../interfaces/IAppContext";
 
 interface Props {
@@ -11,6 +11,7 @@ const AppContext = ( { children }: Props ) => {
         appVersion: '0.0.1',
         numberVersion: 1
     })
+    const drawer = useRef<any>(null)
     const [ modalNotification, setModalNotification ] = useState<IModalNotification>({
         title: '',
         message: '',
@@ -32,6 +33,7 @@ const AppContext = ( { children }: Props ) => {
         setUser,
         order,
         setOrder,
+        drawer,
         settings,
         setSettings,
         formatedPrice,

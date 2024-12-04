@@ -1,4 +1,4 @@
-import { FlatList, ScrollView, View } from "react-native"
+import { DrawerLayoutAndroid, FlatList, ScrollView, StyleSheet, Text, View } from "react-native"
 import { useNavigation } from "@react-navigation/native"
 
 // Estilos
@@ -10,7 +10,6 @@ import { useEffect, useContext, useRef, useState } from "react"
 import { AppContextProvider, IOrder } from "../../interfaces/IAppContext"
 import CardTypeDish from "../../components/home/CardTypeDish"
 import Button from "../../components/Base/Button"
-
 
 const TypeDishes = [
     {
@@ -45,6 +44,7 @@ const ListDishes = () => {
     const appContext = useContext(AppContextProvider)
     const ref = useRef<any>(null)
     const [typeDishSelected, setTypeDishSelected] = useState("entrance")
+    const [open, setOpen] = useState(false)
 
     useEffect(()=> {
         getData()
@@ -132,6 +132,11 @@ const ListDishes = () => {
         // ref.current.scrollToIndex({index: 0})
     }
 
+    const openDrawer = () => {
+        // drawer.current?.openDrawer()
+        appContext.drawer.current?.openDrawer()
+    }
+
     return( 
         <SafeAreaView style={[ BaseStyles.safeArea ]}>
             <View style={[ ListDishesStyles.container ]}>
@@ -147,7 +152,7 @@ const ListDishes = () => {
                         keyExtractor={(item:any) => `${item.id}`} 
                     />
                     <ScrollView>
-                    <Button text="Abrir menu" callBack={() => navigation.openDrawer()} ></Button>
+                    <Button text="Abrir menu" callBack={openDrawer} ></Button>
 
                     </ScrollView>
                 </View>
@@ -160,5 +165,6 @@ const ListDishes = () => {
         </SafeAreaView>
     )
 }
+
 
 export default ListDishes

@@ -76,5 +76,11 @@ export const BaseStyles = StyleSheet.create({
         height: 1,
         width: '100%',
         backgroundColor: Colors.border,
+    }, 
+    loaderContent: {
+        flex: 1,
+        justifyContent: 'center',
+        margin: 'auto',
+        alignItems: 'center',
     }
 })

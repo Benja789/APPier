@@ -1,17 +1,16 @@
-import { ScrollView, Text, View } from "react-native"
+import { ActivityIndicator, ScrollView, View } from "react-native"
 import { SafeAreaView } from "react-native-safe-area-context"
 
 //Components
 import CardTable from "../../components/home/CardTable"
-import IconButton from "../../components/Base/IconButton"
 
 // Estilos
 import { BaseStyles } from "../../styles/BaseStyles"
-import { ListTableStyle } from "../../styles/pages/ListTableStyle"
 import { useNavigation } from "@react-navigation/native"
-import AppBar from "../../components/Base/AppBar"
-import { useContext, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { AppContextProvider } from "../../interfaces/IAppContext"
+import { apiGetData } from "../../services/api"
+import { ENV } from "../../environment/api"
 
 
 const TablesExample = [
@@ -76,11 +75,41 @@ const TablesExample = [
 const ListTable = () => {
     const appContext = useContext(AppContextProvider)
     const navigation = useNavigation<any>()
-    const [showModalDataClient, setShowModalDataClient] = useState(false)   
+    const [tablesData, setTablesDtata] = useState<any>([])
+    const [loading, setLoading] = useState(true)
 
+    useEffect(() => {
+        console.log('Obteniendo datos iniciales')
+        getDataInitial()
+    }, [])
+
+    const getDataInitial = async () => {
+        try {
+            let response = await apiGetData({
+                url: ENV.API_URL + ENV.ENDPOINTS.tables,
+                params: {
+                    waiterKey: 'eTqiuoNGyub3kj6WKV62MAM6bCe2',
+                    orderTableNum: 'desc'
+                },
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwibmFtZSI6IkFkbWluaXN0cmFkb3IiLCJsYXN0TmFtZSI6IlNpc3RlbWEiLCJlbWFpbCI6ImFkbWluQHByZW10ZS5jb20iLCJSb2xfaWQiOiJBZG1pbiIsImlzQWN0aXZlIjp0cnVlLCJpc0RlbGV0ZWQiOmZhbHNlLCJvdHBUb2tlbiI6bnVsbCwidHlwZSI6ImxvZ2luIiwiY3JlYXRlZCI6IjIwMjQtMTEtMTFUMjE6MzY6MTAuMjY1WiIsInZhbGlkIjp0cnVlLCJpYXQiOjE3MzEzNjA5NzB9.G5sqkIy8NY_8Ng4w1_DtQ8wRcPZmY-SoJfn-SMuDMDE' 
+                },
+                setLoader: setLoading
+            })
     
-    const navigatToDetailsOrder = ( item: any ) => {
+            if ( !response.error ) {
+                setTablesDtata(response.data)
+            } else {
+                console.log('Error al obtener los datos')
+            }
+        } catch (error:any) {
+            console.log('Error al obtener los datos ', error.message)
+        }
+    }
 
+
+    const navigatToDetailsOrder = ( item: any ) => {
         appContext.setOrder({
             tablenumber: item.id,
             products: [],
@@ -104,12 +133,19 @@ const ListTable = () => {
             <View style={[ BaseStyles.body ]}>
                 <ScrollView>
                     {
-                        TablesExample.map((item, index) => (
-                            <CardTable 
-                                key={index} 
-                                table={item}
-                                callBack={()=>navigatToDetailsOrder(item)} />
-                        ))
+                        loading ?
+                            <ActivityIndicator style={ BaseStyles.loaderContent } /> 
+                            :
+                            <>
+                                {
+                                    tablesData.map((item:any, index:number) => (
+                                        <CardTable 
+                                            key={index} 
+                                            table={item}
+                                            callBack={()=>navigatToDetailsOrder(item)} />
+                                    ))
+                                }
+                            </>
                     }
             </ScrollView>
             </View>

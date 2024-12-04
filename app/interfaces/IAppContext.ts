@@ -50,6 +50,7 @@ export interface ISnackNotification {
 export interface IContext {
     user: IUser | null
     setUser: Dispatch<SetStateAction<IUser | null>>
+    drawer: any
 
     order: IOrder | null
     setOrder: Dispatch<SetStateAction<IOrder | null>>
@@ -72,6 +73,7 @@ export const AppContextProvider = createContext<IContext>({
     order: null,
     setOrder: () => {},
 
+    drawer: null,
     settings: {
         appVersion: '',
         numberVersion: 0
