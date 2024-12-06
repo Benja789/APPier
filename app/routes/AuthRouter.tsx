@@ -1,5 +1,6 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import SignIn from '../pages/auth/SignIn';
+import Loader from '../components/Base/Loader';
 
 
 const AuthStack = createNativeStackNavigator<any>();
@@ -9,9 +10,11 @@ const AuthRouter = () => {
 		headerShown: false
 	};
     return (
-        <AuthStack.Navigator initialRouteName='SignIn'>
-            <AuthStack.Screen name="SignIn" component={SignIn} options={baseOptions}/>
-        </AuthStack.Navigator>
+        <>
+            <AuthStack.Navigator initialRouteName='SignIn'>
+                <AuthStack.Screen name="SignIn" component={SignIn} options={baseOptions}/>
+            </AuthStack.Navigator>
+        </>
     )
 }
 

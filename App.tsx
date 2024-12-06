@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
@@ -8,6 +8,8 @@ import HomeRouter from './app/routes/HomeRouter';
 import AppContext from './app/context/AppContex';
 import { StatusBar } from 'react-native';
 import AppBar from './app/components/Base/AppBar';
+import Loader from './app/components/Base/Loader';
+import { AppContextProvider } from './app/interfaces/IAppContext';
 
 
 const Stack = createNativeStackNavigator();
@@ -20,6 +22,7 @@ const App = () => {
 	};
 	return (
 		<AppContext>
+			<Loader />
             <StatusBar animated={false} backgroundColor="#FFF" barStyle="dark-content" />
 			<NavigationContainer>
 				<Stack.Navigator initialRouteName="Auth">

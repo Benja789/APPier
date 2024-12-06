@@ -1,4 +1,4 @@
-import { DrawerLayoutAndroid, FlatList, ScrollView, StyleSheet, Text, View } from "react-native"
+import { ActivityIndicator, FlatList, RefreshControl, View } from "react-native"
 import { useNavigation } from "@react-navigation/native"
 
 // Estilos
@@ -9,7 +9,10 @@ import OrderDetails from "../../components/home/OrdersDetails"
 import { useEffect, useContext, useRef, useState } from "react"
 import { AppContextProvider, IOrder } from "../../interfaces/IAppContext"
 import CardTypeDish from "../../components/home/CardTypeDish"
-import Button from "../../components/Base/Button"
+import { apiGetData } from "../../services/api"
+import { ENV } from "../../environment/api"
+import DishCard from "../../components/home/DishCard"
+import ModalAddDish from "../../components/home/ModalAddDish"
 
 const TypeDishes = [
     {
@@ -17,15 +20,15 @@ const TypeDishes = [
         name: "Entradas",
         icon: require("../../assets/icons/entrance.png"),
     },{
-        id: "main",
+        id: "dish",
         name: "Platos fuertes",
         icon: require("../../assets/icons/dish.png"),
     },{
-        id: "dessert",
+        id: "desserts",
         name: "Postres",
         icon: require("../../assets/icons/desserts.png"),
     },{
-        id: "drink",
+        id: "drinks",
         name: "Bebidas",
         icon: require("../../assets/icons/drinks.png"),
     },{
@@ -40,105 +43,117 @@ const TypeDishes = [
 ]
 
 const ListDishes = () => {
-    const navigation = useNavigation<any>()
     const appContext = useContext(AppContextProvider)
     const ref = useRef<any>(null)
     const [typeDishSelected, setTypeDishSelected] = useState("entrance")
+
     const [open, setOpen] = useState(false)
+    const [dishesData, setDishesData] = useState<any>([])
+    const [dishSelected, setDishSelected] = useState<any>({})
+    const [loading, setLoading] = useState(true)
+    const [refresh, setRefresh] = useState(false)
 
     useEffect(()=> {
-        getData()
+        const controller = new AbortController()
+        getData(controller.signal)
+        return () => controller.abort()
     }, [])
     
 
-    const getData = () =>{
-        let products = [
-            {
-                name: "Plato 1",
-                description: "Descripcion del plato 1",
-                price: 100,
-                quantity: 1,
-                type: "Plato fuerte"
-            },{
-                name: "Plato 1",
-                description: "Descripcion del plato 1",
-                price: 100,
-                quantity: 1,
-                type: "Plato fuerte"
-            },{
-                name: "Plato 1",
-                price: 100,
-                description: "Descripcion del plato 1",
-                quantity: 1,
-                type: "Plato fuerte"
-            },{
-                name: "Plato 1",
-                price: 100,
-                description: "Descripcion del plato 1",
-                quantity: 1,
-                type: "Plato fuerte"
-            },{
-                name: "Plato 1",
-                price: 100,
-                description: "Descripcion del plato 1",
-                quantity: 1,
-                type: "Plato fuerte"
-            },{
-                name: "Plato 1",
-                price: 100,
-                description: "Descripcion del plato 1",
-                quantity: 1,
-                type: "Plato fuerte"
-            },{
-                name: "Plato 1",
-                price: 100,
-                description: "Descripcion del plato 1",
-                quantity: 1,
-                type: "Plato fuerte"
-            },{
-                name: "Plato 1",
-                description: "Descripcion del plato 1",
-                price: 100,
-                quantity: 1,
-                type: "Plato fuerte"
-            }
-        ]
+    useEffect(() => {
+        const disherController = new AbortController()
+        getDishes(disherController.signal)
+        return () => disherController.abort()
+
+    }, [typeDishSelected])
+
+    const getData = (signal: AbortSignal) =>{
+        let products:any = [ ]
         appContext?.setOrder((prevState: any) => {
             let order: IOrder = {
                 ...prevState,
-                products: products,
+                products: prevState?.products ?? products,
                 clientName: "Cliente 1",
-                discount: 10,
+                discount: 0,
                 status: "pending",
                 typePayment: "cash",
                 tipCash: 0,
                 tipPercent: 0,
-                subTotal: products.reduce((acc, product) => acc + product.price, 0),
                 tip: 10,
-                // total: products.reduce((acc, product) => acc + product.price, 0),
             }
-            order.tipCash = Math.round(order.subTotal * (order.tip / 100))
-            order.discountCash = Math.round(order.subTotal * (order.discount / 100))
-            order.subTotalWithDiscount = order.subTotal - order.discountCash
-            order.total = order.subTotal - order.discountCash + order.tipCash  
-
-
             return order
         })
+        appContext.calculateTotals()
+        setRefresh(false)
     }
 
     const handleChangeTypeDish = (id: string) => {
-        setTypeDishSelected(id)
-        // ref.current.scrollToIndex({index: 0})
+        setDishesData(() =>[])
+        setTypeDishSelected(() => id)
     }
 
-    const openDrawer = () => {
-        // drawer.current?.openDrawer()
-        appContext.drawer.current?.openDrawer()
+    const getDishes = async ( signal: AbortSignal ) => {
+        let params:any = {
+            visible: true,
+            FatherCategory: typeDishSelected
+        }
+        
+        if (typeDishSelected === 'alls') delete params.FatherCategory
+        let response =  await apiGetData({
+            url: ENV.API_URL + ENV.ENDPOINTS.dishes,
+            params: params,
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwibmFtZSI6IkFkbWluaXN0cmFkb3IiLCJsYXN0TmFtZSI6IlNpc3RlbWEiLCJlbWFpbCI6ImFkbWluQHByZW10ZS5jb20iLCJSb2xfaWQiOiJBZG1pbiIsImlzQWN0aXZlIjp0cnVlLCJpc0RlbGV0ZWQiOmZhbHNlLCJvdHBUb2tlbiI6bnVsbCwidHlwZSI6ImxvZ2luIiwiY3JlYXRlZCI6IjIwMjQtMTEtMTFUMjE6MzY6MTAuMjY1WiIsInZhbGlkIjp0cnVlLCJpYXQiOjE3MzEzNjA5NzB9.G5sqkIy8NY_8Ng4w1_DtQ8wRcPZmY-SoJfn-SMuDMDE' 
+            },
+            signal: signal,
+            setLoader: setLoading
+        })
+        if (!response.error) setDishesData(() => response.data.data)
     }
+
+    const refreshHandle = () => {
+        const controller = new AbortController()
+        const disherController = new AbortController()
+        setRefresh(true)
+        getData(controller.signal)
+        getDishes(disherController.signal)
+        return () => {
+            controller.abort()
+            disherController.abort()
+        }
+    }
+    
+    const openModalAddDish = (dish: any) => {
+        setOpen(true)
+        setDishSelected((prev: any)=>{
+            let findDish = appContext.order?.products.find((product) => product.uid === dish.uid)
+            if ( findDish ) { 
+                return findDish
+            } else {
+                return{
+                    ...dish,
+                    quantity: 1,
+                    totalLine: dish.price
+                }
+            }
+        })
+    }
+
+    const renderItem = ({ item }: any) => (
+        <View style={ListDishesStyles.gridItem}>
+            <DishCard dish={item}  callBack={() =>openModalAddDish(item)}/>
+        </View>
+    );
+
 
     return( 
         <SafeAreaView style={[ BaseStyles.safeArea ]}>
+            <ModalAddDish 
+                open={ open }
+                dish={dishSelected}
+                setDish={ setDishSelected }
+                setOpen={ setOpen }/>
             <View style={[ ListDishesStyles.container ]}>
                 {/* Secciones de dishes */}
                 <View style={[ ListDishesStyles.dishesContainer ]}>
@@ -149,12 +164,16 @@ const ListDishes = () => {
                         horizontal
                         renderItem={({item}) => <CardTypeDish {...item} dishSelected={typeDishSelected} callBack={handleChangeTypeDish}/>}
                         showsHorizontalScrollIndicator={false}
-                        keyExtractor={(item:any) => `${item.id}`} 
-                    />
-                    <ScrollView>
-                    <Button text="Abrir menu" callBack={openDrawer} ></Button>
+                        keyExtractor={(item: any) => `${item.id}`} />
 
-                    </ScrollView>
+                     <FlatList
+                        data={dishesData}
+                        renderItem={renderItem}
+                        keyExtractor={(item, index) => index.toString()}
+                        numColumns={4}
+                        columnWrapperStyle={ListDishesStyles.row}
+                        refreshControl={<RefreshControl refreshing={refresh} onRefresh={refreshHandle} />}
+                        ListEmptyComponent={loading && !refresh ? <ActivityIndicator style={BaseStyles.loaderContent} /> : null}/>
                 </View>
 
                 {/* Seccion del total de la orden */}

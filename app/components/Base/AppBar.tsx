@@ -13,11 +13,12 @@ interface IAppBar {
     showReports: boolean
     showLogout: boolean
     showMenu: boolean
+    showBackButton: boolean
     children?: any  
 }
 
 const AppBar = ( props: IAppBar ) => {
-    const { title, showReports, showLogout, showMenu, children } = props
+    const { title, showReports, showLogout, showBackButton, showMenu, children } = props
 
     const navigate = useNavigation<any>()
     const logout = () => {
@@ -37,12 +38,26 @@ const AppBar = ( props: IAppBar ) => {
         )
     }
 
+    const goBack = () => {
+        navigate.dispatch(
+            CommonActions.goBack()
+        )
+    }
+
     return (
         <View style={AppbarStyles.content}>
             <View style={[ AppbarStyles.title ]}>
-                <Text style={[BaseStyles.textTitleH1, AppbarStyles.text ]}>
-                    { title }
-                </Text>
+                <View style={[AppbarStyles.containerIcon, { alignItems:'center'} ]}>
+                    {
+                        showBackButton &&
+                            <IconButton 
+                                callBack={goBack}
+                                icon={require("../../assets/icons/arrow-left.png")}/>
+                    }
+                    <Text style={[BaseStyles.textTitleH1, AppbarStyles.text ]}>
+                        { title }
+                    </Text>
+                </View>
                 <View style={AppbarStyles.containerIcon }>
                     {
                         showReports &&

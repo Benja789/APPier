@@ -13,28 +13,52 @@ interface IDishAddedProps {
 const DishAdded = ( props: IDishAddedProps ) => {
     const { dish } = props
     const appContext = useContext(AppContextProvider)
+
+    // Metodo para eliminar un producto de la orden
+    const deleteDish = () => {
+        appContext.deleteDish(dish)
+    }
+
+    // Metodo para cambiar las cantidades de los platos
+    const changeQuantity = (type: '-' | '+') => {
+        appContext.changeQuantity(dish, type)
+    }
+
+    // Metodo para obtener el label del order
+    const getLabel = () => {
+        let label = dish.name ?? ""
+        if ( dish.type ) {
+            if ( dish.type === 'entrance' ) label += " (Entrada)" 
+            if ( dish.type === 'dish' ) label += " (Plato fuerte)" 
+            if ( dish.type === 'dessert' ) label += " (Postre)" 
+        }
+        return label
+    }
+
+
     return (
         <View style={ DishAddedStyles.cardDish}>
             <View style={[ DishAddedStyles.containerButton ]}>
-                <View>
-                    <Text style={[BaseStyles.textTitleH3, { fontSize: 13 }]}>{ dish.name ?? ""}</Text>
+                <View style={{ width:"85%"}}>
+                    <Text style={[BaseStyles.textTitleH3, { fontSize: 13 }]}>{ getLabel() }</Text>
                     <Text style={[BaseStyles.textP, { fontSize: 12 }]}>{ dish.description ?? "" }</Text>
                     <Text style={[BaseStyles.textP, { fontSize: 12 }]}>${ appContext.formatedPrice(dish.price ?? 0) ?? "" }</Text>
+                    <Text style={[BaseStyles.textTitleH1, { fontSize: 12 }]}>${ appContext.formatedPrice(dish.totalLine ?? 0) ?? "" }</Text>
                 </View>
                 <IconButton
                     icon={require("../../assets/icons/delete.png")}
-                    callBack={()=>{}}/>
+                    callBack={()=> deleteDish()}/>
             </View>
             <View style={[ DishAddedStyles.containerButton ]}>
-                <Button 
+               <Button 
                     text="-"
-                    buttonStyle={{ width: 80 }}
-                    callBack={()=>{}}/>
+                     buttonStyle={{ width: 80 }}
+                    callBack={()=> changeQuantity('-') }/>
                 <Text style={[BaseStyles.textP, { fontSize: 12 }]}>{ dish.quantity ?? 0 }</Text>
                 <Button 
                     text="+"
                     buttonStyle={{ width: 80 }}
-                    callBack={()=>{}}/>
+                    callBack={()=> changeQuantity('+') }/>
             </View>
         </View>
     )

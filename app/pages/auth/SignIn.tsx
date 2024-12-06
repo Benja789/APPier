@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { Text, View, TextInput, Image, KeyboardAvoidingView, Platform, ScrollView } from "react-native"
 import { CommonActions, useNavigation } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context"
@@ -11,27 +11,60 @@ import LabelButton from "../../components/Base/LabelButton";
 // Estilos
 import { BaseStyles } from "../../styles/BaseStyles";
 import { SignInStyle } from "../../styles/pages/SignInStyle";
+import { apiPostData } from "../../services/api";
+import { ENV } from "../../environment/api";
 
 const SignIn = () => {
     const navigation = useNavigation<any>();
     const appContext =  useContext(AppContextProvider);
+    const [message, setMessage] = useState<string>('');
+    const [code, setCode] = useState<string>('');
 
-    const loginApp = () => {
-        navigation.dispatch(
-            CommonActions.reset({
-                index: 0,
-                routes: [{
-                    name: 'Home',
-                    state: {
-                        routes: [
-                            {
-                                name: 'ListTable',
-                            }
-                        ]
-                    }
-                }],
-            })
-        );
+    const loginApp = async() => {
+        if ( code === '' ) {
+            setMessage('El código de acceso es requerido');
+            return;
+        }
+        setMessage('');
+        let response:any = await apiPostData({
+            url: ENV.API_URL + ENV.ENDPOINTS.auth,
+            body: { 
+                accessCode: code 
+            },
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            setLoader: appContext.setLoader
+        })
+        console.log(response)
+        if ( response.error ) {
+            setMessage(response.data.message ?? "Error en el inicio de sesión");
+
+        } else {
+            navigation.dispatch(
+                CommonActions.reset({
+                    index: 0,
+                    routes: [{
+                        name: 'Home',
+                        state: {
+                            routes: [
+                                {
+                                    name: 'ListTable',
+                                }
+                            ]
+                        }
+                    }],
+                })
+            );
+        }
+    }
+
+    const onChangeText = (text: string) => {
+        if ( text.length > 6 ) {
+            setMessage('El código de acceso no puede ser mayor a 4 caracteres');
+            return
+        }
+        setCode(text);
     }
     return (
         <KeyboardAvoidingView
@@ -51,7 +84,15 @@ const SignIn = () => {
                                 </Text>
                                 <TextInput
                                     keyboardType="numeric"
+                                    value={code}
+                                    onChangeText={(text) => onChangeText(text)}
                                     style={[BaseStyles.inputText, SignInStyle.inputCode]} />
+                                {
+                                    message !== '' &&
+                                    <Text style={[BaseStyles.errorMessage, { marginLeft:30, marginTop:10}]}>
+                                        {message}
+                                    </Text>
+                                }
                             </View>
                             <View style={[BaseStyles.cardAction]}>
                                 <Button

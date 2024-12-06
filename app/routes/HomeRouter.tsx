@@ -17,6 +17,7 @@ const HomeRouter = () => {
         title: "Selecciona una mesa",
         showMenu: false,
         showReports: false,
+        showBackButton: false,
         showLogout: true
     });
 
@@ -25,30 +26,42 @@ const HomeRouter = () => {
             const routeName = e.data.state.routes[0].state?.index
             switch (routeName) {
                 case 0:
-                    setTimeout(()=>{
+                    setTimeout(() => {
                         setChangesApp({
                             title: "Selecciona una mesa",
                             showMenu: false,
                             showReports: false,
+                            showBackButton: false,
                             showLogout: true
                         });
                     }, 100)
                     break;
                 case 1:
-                    setTimeout(()=>{
+                    setTimeout(() => {
                         setChangesApp({
                             title: "Lista de Platos",
-                            showMenu: true,
+                            showMenu: false,
                             showReports: false,
+                            showBackButton: true,
                             showLogout: false
                         });
                     }, 100)
+                    break;
+                case undefined:
+                    setChangesApp({
+                        title: "Selecciona una mesa",
+                        showMenu: false,
+                        showReports: false,
+                        showBackButton: false,
+                        showLogout: true
+                    });
                     break;
                 default:
                     setChangesApp({
                         title: "App",
                         showMenu: false,
                         showReports: false,
+                        showBackButton: false,
                         showLogout: false
                     });
                     break;
@@ -74,7 +87,7 @@ const HomeRouter = () => {
 
     const baseOptions = {
         headerShown: true,
-		header: () => <AppBar {...changesApp}/>
+        header: () => <AppBar {...changesApp} />
     }
 
     return (

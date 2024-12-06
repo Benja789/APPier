@@ -52,11 +52,17 @@ export interface IContext {
     setUser: Dispatch<SetStateAction<IUser | null>>
     drawer: any
 
+    loader: boolean
+    setLoader: Dispatch<SetStateAction<boolean>>
+
     order: IOrder | null
     setOrder: Dispatch<SetStateAction<IOrder | null>>
 
     settings: ISettings
     setSettings: Dispatch<SetStateAction<ISettings>>
+    addDish: (dish: any) => void
+    deleteDish: (dish: any) => void
+    changeQuantity: (dish: any, type: '-' | '+') => void
 
     modalNotification: IModalNotification
     setModalNotification: Dispatch<SetStateAction<IModalNotification>>
@@ -64,11 +70,16 @@ export interface IContext {
     formatedPrice: ( number: number ) => string
     snackNotification: ISnackNotification
     setSnackNotification: Dispatch<SetStateAction<ISnackNotification>>
+
+    calculateTotals: () => void
 }
 
 export const AppContextProvider = createContext<IContext>({
     user: null,
     setUser: () => {},
+
+    loader: false,
+    setLoader: () => {},
 
     order: null,
     setOrder: () => {},
@@ -97,5 +108,9 @@ export const AppContextProvider = createContext<IContext>({
     },
     setSnackNotification: () => {},
 
-    formatedPrice: () => ''
+    formatedPrice: () => '',
+    addDish: () => {},
+    deleteDish: () => {},
+    changeQuantity: () => {},
+    calculateTotals: () => {}
 })

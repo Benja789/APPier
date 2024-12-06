@@ -20,6 +20,12 @@ export const BaseStyles = StyleSheet.create({
         fontFamily: 'Poppins-Regular',
         fontSize: 16
     },
+    errorMessage: {
+        fontFamily: 'Poppins-Bold',
+        fontSize: 16,
+        color: Colors.error
+
+    },
 
     safeArea: {
         flex: 1,
@@ -68,8 +74,11 @@ export const BaseStyles = StyleSheet.create({
         borderWidth: 1,
         borderColor: Colors.border,
         borderRadius: 10,
-        fontFamily: 'Poppins-Regular',
-        
+        fontFamily: 'Poppins-Regular'
+    },
+    multiLineInput: {
+        textAlignVertical: "top",
+        height: 100,
     },
     divider: {
         marginVertical: 10,
@@ -82,5 +91,31 @@ export const BaseStyles = StyleSheet.create({
         justifyContent: 'center',
         margin: 'auto',
         alignItems: 'center',
-    }
+    },
+
+    blurModal: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        bottom: 0,
+        right: 0
+    },
+    modalView: {
+		backgroundColor: 'white',
+		borderRadius:10,
+		paddingVertical: 15,
+        paddingHorizontal: 20,
+        margin: "auto",
+        width: "80%",
+		shadowColor: '#000',
+		shadowOffset: {
+			width: 0,
+			height: 0
+		},
+		shadowOpacity: 0.25,
+		shadowRadius: 4,
+		elevation: 5,
+	},
+
+    
 })
