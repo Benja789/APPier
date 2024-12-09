@@ -72,6 +72,7 @@ const AppContext = ( { children }: Props ) => {
             calculateTotals()
         }
     }
+
     const deleteDish = (dish: any) => {
         if ( order ) {
             setOrder((prevState: any) => {
@@ -82,6 +83,23 @@ const AppContext = ( { children }: Props ) => {
                 let flag =  order.products.findIndex((product) => product.uid === dish.uid)
                 if (flag !== -1) {
                     order.products.splice(flag, 1)
+                }
+                return order
+            })
+            calculateTotals()
+        }
+    }
+
+    const setDish = (dish: any) => {
+        if ( order ) {
+            setOrder((prevState: any) => {
+                let order: IOrder = {
+                    ...prevState,
+                    products: [...prevState.products]
+                }
+                let flag =  order.products.findIndex((product) => product.uid === dish.uid)
+                if (flag !== -1) {
+                    order.products[flag] = dish
                 }
                 return order
             })
@@ -128,6 +146,7 @@ const AppContext = ( { children }: Props ) => {
         settings,
         addDish,
         deleteDish,
+        setDish,
         changeQuantity,
         setSettings,
         formatedPrice,

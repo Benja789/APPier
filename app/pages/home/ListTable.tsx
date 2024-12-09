@@ -85,6 +85,7 @@ const ListTable = () => {
         <SafeAreaView style={[ BaseStyles.safeArea ]}>
             <View style={[ BaseStyles.body ]}>
                 <ScrollView	refreshControl={<RefreshControl refreshing={refresh} onRefresh={refreshHandle} />}>
+                    
                     {
                         (loading && !refresh) ?
                             <ActivityIndicator style={ BaseStyles.loaderContent } /> 

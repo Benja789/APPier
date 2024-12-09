@@ -1,5 +1,4 @@
 import { ActivityIndicator, FlatList, RefreshControl, View } from "react-native"
-import { useNavigation } from "@react-navigation/native"
 
 // Estilos
 import { BaseStyles } from "../../styles/BaseStyles"
@@ -13,6 +12,7 @@ import { apiGetData } from "../../services/api"
 import { ENV } from "../../environment/api"
 import DishCard from "../../components/home/DishCard"
 import ModalAddDish from "../../components/home/ModalAddDish"
+import ModalDishDetails from "../../components/home/DishDetails"
 
 const TypeDishes = [
     {
@@ -48,6 +48,7 @@ const ListDishes = () => {
     const [typeDishSelected, setTypeDishSelected] = useState("entrance")
 
     const [open, setOpen] = useState(false)
+    const [openModalDetails, setOpenModalDetails] = useState(false)
     const [dishesData, setDishesData] = useState<any>([])
     const [dishSelected, setDishSelected] = useState<any>({})
     const [loading, setLoading] = useState(true)
@@ -140,9 +141,17 @@ const ListDishes = () => {
         })
     }
 
+    const handleModalDetails = (dish: any) => {
+        setOpenModalDetails(true)
+        setDishSelected(dish)
+    }
+
     const renderItem = ({ item }: any) => (
         <View style={ListDishesStyles.gridItem}>
-            <DishCard dish={item}  callBack={() =>openModalAddDish(item)}/>
+            <DishCard 
+                dish={item} 
+                callBackDetails={() => handleModalDetails(item)}
+                callBack={() =>openModalAddDish(item)}/>
         </View>
     );
 
@@ -154,6 +163,11 @@ const ListDishes = () => {
                 dish={dishSelected}
                 setDish={ setDishSelected }
                 setOpen={ setOpen }/>
+            <ModalDishDetails
+                open={ openModalDetails }
+                dish={dishSelected}
+                callBackAdd={() => openModalAddDish(dishSelected)}
+                setOpen={ setOpenModalDetails }/>
             <View style={[ ListDishesStyles.container ]}>
                 {/* Secciones de dishes */}
                 <View style={[ ListDishesStyles.dishesContainer ]}>

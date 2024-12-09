@@ -18,6 +18,7 @@ interface IModalAddDish {
 const ModalAddDish = (props: IModalAddDish) => {
     const { open, dish, setOpen, setDish } = props;
     const appContext = useContext(AppContextProvider)
+    const [dishFind, setDishFind] = useState<any>({})
     const [dishOptions, setDishOptions] = useState<any>({
         type: "",
         notes: "",
@@ -28,6 +29,18 @@ const ModalAddDish = (props: IModalAddDish) => {
         notes: "",
         extras: ""
     })
+
+    useEffect(()=>{
+        if ( open ) {
+            let dishFind = appContext.order?.products?.find((item:any)=> item.uid === dish.uid)
+            setDishFind(dishFind)
+            setDishOptions({
+                type: dishFind?.type ?? "",
+                notes: dishFind?.notes ?? "",
+                extras: dishFind?.extras ?? []
+            })
+        }
+    }, [open])
 
     // Metodo para cerrar el modal
     const closeModal = () => {
@@ -89,10 +102,17 @@ const ModalAddDish = (props: IModalAddDish) => {
             })
             return
         }
-        appContext.addDish({
-            ...dish,
-            ...dishOptions
-        })
+        if ( dishFind !== undefined ) {
+            appContext.setDish({
+                ...dish,
+                ...dishOptions
+            })
+        } else {
+            appContext.addDish({
+                ...dish,
+                ...dishOptions
+            })
+        }
         closeModal()
     }
 

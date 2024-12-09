@@ -93,16 +93,16 @@ const HomeRouter = () => {
     return (
         <>
             {/* <NavigationContainer> */}
-            <DrawerLayoutAndroid
+            {/* <DrawerLayoutAndroid
                 ref={context.drawer}
                 drawerWidth={300}
                 drawerPosition={'right'}
-                renderNavigationView={() => <OrderDetails />}>
+                renderNavigationView={() => <OrderDetails />}> */}
                 <AuthStack.Navigator initialRouteName='ListTable'>
                     <AuthStack.Screen name="ListTable" component={ListTable} options={baseOptions} />
                     <AuthStack.Screen name="ListDishes" component={ListDishes} options={baseOptions} />
                 </AuthStack.Navigator>
-            </DrawerLayoutAndroid>
+            {/* </DrawerLayoutAndroid> */}
         </>
     )
 }

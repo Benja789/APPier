@@ -19,7 +19,8 @@
     "react-native": "0.76.3",
     "react-native-drawer-layout": "^4.0.3",
     "react-native-safe-area-context": "^4.14.0",
-    "react-native-screens": "^4.3.0"
+    "react-native-screens": "^4.3.0",
+    "react-native-webp": "^0.3.1"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",

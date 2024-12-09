@@ -5,9 +5,7 @@ import { AppContextProvider } from "../../interfaces/IAppContext";
 
 const Loader = ( ) => {
     const context = useContext(AppContextProvider)
-    useEffect(()=> {
-        console.log(context.loader)
-    }, [])
+
     return(
         <Modal visible={context.loader} animationType="slide" transparent={true}>
             <BlurView

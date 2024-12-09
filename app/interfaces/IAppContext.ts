@@ -62,6 +62,7 @@ export interface IContext {
     setSettings: Dispatch<SetStateAction<ISettings>>
     addDish: (dish: any) => void
     deleteDish: (dish: any) => void
+    setDish: (dish: any) => void
     changeQuantity: (dish: any, type: '-' | '+') => void
 
     modalNotification: IModalNotification
@@ -111,6 +112,7 @@ export const AppContextProvider = createContext<IContext>({
     formatedPrice: () => '',
     addDish: () => {},
     deleteDish: () => {},
+    setDish: () => {},
     changeQuantity: () => {},
     calculateTotals: () => {}
 })

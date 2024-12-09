@@ -36,11 +36,9 @@ const SignIn = () => {
             },
             setLoader: appContext.setLoader
         })
-        console.log(response)
-        if ( response.error ) {
-            setMessage(response.data.message ?? "Error en el inicio de sesión");
-
-        } else {
+        
+        if ( response.error )  setMessage(response.data.message ?? "Error en el inicio de sesión");
+        else {
             navigation.dispatch(
                 CommonActions.reset({
                     index: 0,
