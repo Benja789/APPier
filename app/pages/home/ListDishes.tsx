@@ -13,6 +13,7 @@ import { ENV } from "../../environment/api"
 import DishCard from "../../components/home/DishCard"
 import ModalAddDish from "../../components/home/ModalAddDish"
 import ModalDishDetails from "../../components/home/DishDetails"
+import ModalChangeDocument from "../../components/home/ModalChangeDocument"
 
 const TypeDishes = [
     {
@@ -53,6 +54,7 @@ const ListDishes = () => {
     const [dishSelected, setDishSelected] = useState<any>({})
     const [loading, setLoading] = useState(true)
     const [refresh, setRefresh] = useState(false)
+    const [openChangeDocument, setOpenChangeDocument] = useState(false)
 
     useEffect(()=> {
         const controller = new AbortController()
@@ -78,6 +80,7 @@ const ListDishes = () => {
                 discount: 0,
                 status: "pending",
                 typePayment: "cash",
+                typeDocument: "TKT",
                 tipCash: 0,
                 tipPercent: 0,
                 tip: 10,
@@ -168,6 +171,7 @@ const ListDishes = () => {
                 dish={dishSelected}
                 callBackAdd={() => openModalAddDish(dishSelected)}
                 setOpen={ setOpenModalDetails }/>
+            <ModalChangeDocument />
             <View style={[ ListDishesStyles.container ]}>
                 {/* Secciones de dishes */}
                 <View style={[ ListDishesStyles.dishesContainer ]}>

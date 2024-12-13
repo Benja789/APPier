@@ -8,6 +8,7 @@ const AppContext = ( { children }: Props ) => {
     const [ user, setUser ] = useState<IUser | null>(null)
     const [ order, setOrder ] = useState<IOrder | null>(null)
     const [ loader, setLoader ] = useState<boolean>(false)
+    const [openModalChangeDocument, setOpenModalChangeDocument] = useState(false)
     const [ settings, setSettings ] = useState<ISettings>({
         appVersion: '0.0.1',
         numberVersion: 1
@@ -40,11 +41,31 @@ const AppContext = ( { children }: Props ) => {
                     subTotalWithDiscount: 0,
                     total: 0
                 }
+
+                if ( order.typeDocument === "IVAEXE" ) {
+                    order.products = order.products.map((product) => {
+                        product.priceWithTaxes = product.price
+                        product.price = Math.round((product.price - ( product.price * 0.13)) * 100) / 100
+                        product.totalLine = Math.round((product.price * product.quantity) * 100) / 100
+                        product.totalLine = Math.round((product.totalLine) * 100) / 100
+                        return product
+                    })
+                } else {                
+                    order.products = order.products.map((product) => {
+                        if ( product.priceWithTaxes ) product.price = product.priceWithTaxes
+                        else product.priceWithTaxes = product.price
+                        product.totalLine = Math.round((product.price * product.quantity) * 100) / 100
+                        product.totalLine = Math.round((product.totalLine) * 100) / 100
+                        return product
+                    })
+                }
+
                 order.subTotal = order.products.reduce((acc, product) => acc + (product.price * product.quantity), 0)
                 order.tipCash = Math.round((order.subTotal * (order.tip / 100))*100)/100
                 order.discountCash = Math.round((order.subTotal * (order.discount / 100))*100)/100
                 order.subTotalWithDiscount = order.subTotal - order.discountCash
-                order.total = order.subTotal - order.discountCash + order.tipCash  
+                
+                order.total = order.subTotalWithDiscount + order.tipCash  
                 return order
             })
             
@@ -117,14 +138,11 @@ const AppContext = ( { children }: Props ) => {
                 let flag =  order.products.findIndex((product) => product.uid === dish.uid)
                 if (flag !== -1) {
                     let quantity = order.products[flag].quantity
-                    if (type === '+') {
-                        quantity++
-                    } else {
-                        quantity--
-                    }
-                    if ( quantity == 0 ) {
-                        order.products.splice(flag, 1)
-                    } else {
+                    if (type === '+') quantity++
+                    else quantity--
+
+                    if ( quantity == 0 ) order.products.splice(flag, 1)
+                    else {
                         order.products[flag].quantity = quantity
                         order.products[flag].totalLine = Math.round((order.products[flag].price * quantity) * 100) / 100
                     }
@@ -142,6 +160,8 @@ const AppContext = ( { children }: Props ) => {
         setOrder,
         loader,
         setLoader,
+        openModalChangeDocument,
+        setOpenModalChangeDocument,
         drawer,
         settings,
         addDish,

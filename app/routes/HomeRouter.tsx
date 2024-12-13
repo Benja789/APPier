@@ -18,6 +18,7 @@ const HomeRouter = () => {
         showMenu: false,
         showReports: false,
         showBackButton: false,
+        showChangeDocument: false,
         showLogout: true
     });
 
@@ -31,6 +32,7 @@ const HomeRouter = () => {
                             title: "Selecciona una mesa",
                             showMenu: false,
                             showReports: false,
+                            showChangeDocument: false,
                             showBackButton: false,
                             showLogout: true
                         });
@@ -43,6 +45,7 @@ const HomeRouter = () => {
                             showMenu: false,
                             showReports: false,
                             showBackButton: true,
+                            showChangeDocument: true,
                             showLogout: false
                         });
                     }, 100)
@@ -52,6 +55,7 @@ const HomeRouter = () => {
                         title: "Selecciona una mesa",
                         showMenu: false,
                         showReports: false,
+                        showChangeDocument: false,
                         showBackButton: false,
                         showLogout: true
                     });
@@ -61,6 +65,7 @@ const HomeRouter = () => {
                         title: "App",
                         showMenu: false,
                         showReports: false,
+                        showChangeDocument: false,
                         showBackButton: false,
                         showLogout: false
                     });

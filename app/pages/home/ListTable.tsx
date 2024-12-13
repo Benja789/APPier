@@ -11,6 +11,7 @@ import { useContext, useEffect, useState } from "react"
 import { AppContextProvider } from "../../interfaces/IAppContext"
 import { apiGetData } from "../../services/api"
 import { ENV } from "../../environment/api"
+import React from "react"
 
 const ListTable = () => {
     const appContext = useContext(AppContextProvider)
@@ -63,7 +64,9 @@ const ListTable = () => {
             discount: 0,
             tip: 0,
             tipCash: 0,
+            taxes: 0,
             total: 0,
+            typeDocument: "TKT",
             discountCash: 0,
             status: '',
             subTotalWithDiscount: 0,

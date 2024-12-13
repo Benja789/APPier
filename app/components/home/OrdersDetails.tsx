@@ -26,7 +26,7 @@ const OrderDetails = () => {
             <View style={[ OrderDetailsStyles.buttonContainer ]}>
                 <View style={BaseStyles.divider}/>
                 <View style={[OrderDetailsStyles.informationDetails, { width:"100%"}]}>
-                    <Text style={[ BaseStyles.textP, OrderDetailsStyles.textDetails ]}>Subtotal antes del desc.</Text>
+                    <Text style={[ BaseStyles.textP, OrderDetailsStyles.textDetails ]}>Subtotal</Text>
                     <Text style={[ BaseStyles.textP, OrderDetailsStyles.textDetails ]}>$ { appContext.formatedPrice(appContext.order?.subTotal ?? 0) }</Text>
                 </View>
 
@@ -38,7 +38,15 @@ const OrderDetails = () => {
                 <View style={[OrderDetailsStyles.informationDetails]}>
                     <Text style={[ BaseStyles.textP, OrderDetailsStyles.textDetails ]}>Subtotal despues del desc.</Text>
                     <Text style={[ BaseStyles.textP, OrderDetailsStyles.textDetails ]}>$ { appContext.formatedPrice(appContext.order?.subTotalWithDiscount ?? 0) }</Text>
-                </View>            
+                </View>     
+
+                {
+                    appContext.order?.typeDocument === "IVAEXE" &&
+                        <View style={[OrderDetailsStyles.informationDetails]}>
+                            <Text style={[ BaseStyles.textP, OrderDetailsStyles.textDetails ]}>Impuestos (13%)</Text>
+                            <Text style={[ BaseStyles.textP, OrderDetailsStyles.textDetails ]}>$ { appContext.formatedPrice(appContext.order?.taxes ?? 0) }</Text>
+                        </View>
+                }
 
                 <View style={[OrderDetailsStyles.informationDetails]}>
                     <Text style={[ BaseStyles.textP, OrderDetailsStyles.textDetails ]}>Propina ({ appContext.formatedPrice(appContext.order?.tip ?? 0)}%)</Text>

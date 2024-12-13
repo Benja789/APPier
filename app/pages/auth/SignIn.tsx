@@ -83,6 +83,11 @@ const SignIn = () => {
                                 <TextInput
                                     keyboardType="numeric"
                                     value={code}
+                                    // onKeyPress={(key)=>{
+                                    //     if(key.nativeEvent.key == "Enter"){
+                                    //         loginApp();
+                                    //     }
+                                    // }}
                                     onChangeText={(text) => onChangeText(text)}
                                     style={[BaseStyles.inputText, SignInStyle.inputCode]} />
                                 {

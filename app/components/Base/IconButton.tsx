@@ -1,4 +1,4 @@
-import { Image, TouchableHighlight, TouchableOpacity } from "react-native"
+import { Image, TouchableHighlight } from "react-native"
 import { IconButtonStyle } from "../../styles/base/IconButtonStyles";
 
 interface IIconButtonProps {

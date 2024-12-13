@@ -17,10 +17,12 @@ export interface IOrder {
     discount: number
     discountCash: number
     tip: number
+    taxes: number
     tipCash: number
     total: number
     status: string
     typePayment: string
+    typeDocument: "COF" | "CRF" | "TKT" | "IVAEXE"
 }
 
 export interface ISettings {
@@ -58,6 +60,9 @@ export interface IContext {
     order: IOrder | null
     setOrder: Dispatch<SetStateAction<IOrder | null>>
 
+    openModalChangeDocument: boolean
+    setOpenModalChangeDocument: Dispatch<SetStateAction<boolean>>
+
     settings: ISettings
     setSettings: Dispatch<SetStateAction<ISettings>>
     addDish: (dish: any) => void
@@ -84,6 +89,9 @@ export const AppContextProvider = createContext<IContext>({
 
     order: null,
     setOrder: () => {},
+
+    openModalChangeDocument: false,
+    setOpenModalChangeDocument: () => {},
 
     drawer: null,
     settings: {

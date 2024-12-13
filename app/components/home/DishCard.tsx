@@ -1,4 +1,4 @@
-import { Image, Text, Touchable, TouchableOpacity, View } from "react-native"
+import { Image, Text, TouchableOpacity, View } from "react-native"
 import { BaseStyles } from "../../styles/BaseStyles"
 import Button from "../Base/Button"
 import { ListDishesStyles } from "../../styles/pages/ListDishesStyles"

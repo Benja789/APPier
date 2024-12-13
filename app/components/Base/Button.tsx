@@ -1,7 +1,6 @@
-import { Text, TouchableOpacity, View } from "react-native";
+import { Text, TouchableOpacity } from "react-native";
 
 // Estilos
-import { BaseStyles } from "../../styles/BaseStyles";
 import { ButtonStyle } from "../../styles/base/ButtonStyle";
 
 interface IButtonProps {

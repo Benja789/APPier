@@ -124,8 +124,8 @@ const ModalAddDish = (props: IModalAddDish) => {
             onRequestClose={closeModal}>
             <BlurView
                 style={BaseStyles.blurModal}
-                blurType="light" // Puedes cambiar esto a 'dark' para un efecto de desenfoque oscuro
-                blurAmount={1} // Ajusta la cantidad de desenfoque
+                blurType="light"
+                blurAmount={1}
                 reducedTransparencyFallbackColor="white" />
             <View style={[BaseStyles.modalView]}>
                 <View style={[ModalAddDishStyles.titleModal]}>

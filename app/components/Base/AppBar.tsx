@@ -7,6 +7,9 @@ import IconButton from "../../components/Base/IconButton"
 // Estilos
 import { AppbarStyles } from "../../styles/components/AppbarStyles"
 import { BaseStyles } from "../../styles/BaseStyles"
+import Button from "./Button"
+import { useContext } from "react"
+import { AppContextProvider } from "../../interfaces/IAppContext"
 
 interface IAppBar {
     title: string
@@ -14,13 +17,23 @@ interface IAppBar {
     showLogout: boolean
     showMenu: boolean
     showBackButton: boolean
+    showChangeDocument: boolean
     children?: any  
 }
 
 const AppBar = ( props: IAppBar ) => {
-    const { title, showReports, showLogout, showBackButton, showMenu, children } = props
-
+    const { 
+        title, 
+        showReports, 
+        showLogout, 
+        showBackButton, 
+        showMenu, 
+        showChangeDocument,
+        children 
+    } = props
+    const appContext = useContext(AppContextProvider)
     const navigate = useNavigation<any>()
+
     const logout = () => {
         navigate.dispatch(
             CommonActions.reset({
@@ -42,6 +55,10 @@ const AppBar = ( props: IAppBar ) => {
         navigate.dispatch(
             CommonActions.goBack()
         )
+    }
+
+    const openModalChangeDocument = () => {
+        appContext.setOpenModalChangeDocument(true)
     }
 
     return (
@@ -76,6 +93,12 @@ const AppBar = ( props: IAppBar ) => {
                             <IconButton
                                 callBack={showDrawer}
                                 icon={require("../../assets/icons/burger-bar.png")}/>
+                    }
+                    {
+                        showChangeDocument &&
+                            <Button 
+                                text="Cambiar Documento Fiscal"
+                                callBack={openModalChangeDocument}/>
                     }
                 </View>
             </View>
