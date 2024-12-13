@@ -22,7 +22,7 @@ const CardTable = ( props: ICardTableProps ) => {
                                 <View style={[ CardTableStyle.viewContainer, ( table?.enabled ? CardTableStyle.viewAvailable : CardTableStyle.viewOcuped ) ]}/>
                                 <View>
                                     <Text style={[BaseStyles.textTitleH2, { padding: 0, margin: 0 }]}>
-                                        Mesa { table.tableNumber ?? "-" }
+                                        Mesa { table.table?.tableNumSeats ?? "-" }
                                     </Text>
                                     <Text style={[BaseStyles.textP, ( table?.enabled ? CardTableStyle.textAvailable : CardTableStyle.textOcuped ) ]}>
                                         { table?.labelStatus ?? "-" }
@@ -30,7 +30,7 @@ const CardTable = ( props: ICardTableProps ) => {
                                 </View>
                             </View>
                             <Text style={[BaseStyles.textP, { textAlign: 'center' }]}>
-                                Mesa para { table?.numberSeats ?? 1 } personas
+                                Mesa para { table?.table?.tableNumSeats ?? 1 } personas
                             </Text>
                         </View>
                     </View>

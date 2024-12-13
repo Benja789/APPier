@@ -12,6 +12,7 @@ import { AppContextProvider } from "../../interfaces/IAppContext"
 import { apiGetData } from "../../services/api"
 import { ENV } from "../../environment/api"
 import React from "react"
+import firestore, { FirebaseFirestoreTypes } from '@react-native-firebase/firestore';
 
 const ListTable = () => {
     const appContext = useContext(AppContextProvider)
@@ -19,11 +20,41 @@ const ListTable = () => {
     const [tablesData, setTablesDtata] = useState<any>([])
     const [loading, setLoading] = useState(true)
     const [refresh, setRefresh] = useState(false)
+    const [data, setData] = useState<any>([])
 
     useEffect(() => {
-        const controller = new AbortController()
-        getDataInitial(controller.signal)
-		return () => controller.abort()
+        console.log(appContext.user)
+        const collectionRef = firestore().collection('orders')
+        let query: FirebaseFirestoreTypes.Query = collectionRef
+        let filters:any = [{
+            field: 'status',
+            operator: '!=',
+            value: 'CompleteClosure'
+        },{
+            field:"waiter.uid",
+            operator:"==",
+            value: appContext.user?.uid ?? ""
+        }]
+        filters.forEach((filter:any) => {
+            query = query.where(filter.field, filter.operator, filter.value)
+        })
+        const unsubscribe = query.onSnapshot((querySnapshot: any) => {
+            const items: any = [];
+            console.log('Total tables: ', querySnapshot?.size)
+            if (!querySnapshot?.empty) {
+                querySnapshot?.forEach((doc: any) => {
+                    console.log(doc.id)
+                    items.push({
+                        id: doc.id,
+                        ...doc.data()
+                    });
+                });
+            }
+            setData(items)
+        });
+        setLoading(false)
+  
+    //   return () => unsubscribe();
     }, [])
 
     const getDataInitial = async (signal: AbortSignal) => {
@@ -95,7 +126,7 @@ const ListTable = () => {
                             :
                             <>
                                 {
-                                    tablesData?.map((item:any, index:number) => (
+                                    data?.map((item:any, index:number) => (
                                         <CardTable 
                                             key={index} 
                                             table={item}

@@ -39,6 +39,16 @@ const SignIn = () => {
         
         if ( response.error )  setMessage(response.data.message ?? "Error en el inicio de sesión");
         else {
+            // console.log(response.data);
+            let data = response.data.data
+            appContext.setUser({
+                id: data.user.id,
+                name: data.user.name,
+                email: data.user.email,
+                role: data.user.Rol_id,
+                token: data.token,
+                uid: data.user.uid
+            })
             navigation.dispatch(
                 CommonActions.reset({
                     index: 0,

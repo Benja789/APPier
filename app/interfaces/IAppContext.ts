@@ -6,6 +6,7 @@ export interface IUser {
     email: string
     role: string
     token: string
+    uid: string
 }
 
 export interface IOrder {
