@@ -1,3 +1,4 @@
+import React from "react"
 import { ActivityIndicator, RefreshControl, ScrollView, View } from "react-native"
 import { SafeAreaView } from "react-native-safe-area-context"
 
@@ -11,8 +12,6 @@ import { useContext, useEffect, useState } from "react"
 import { AppContextProvider } from "../../interfaces/IAppContext"
 import { apiGetData } from "../../services/api"
 import { ENV } from "../../environment/api"
-import React from "react"
-import firestore, { FirebaseFirestoreTypes } from '@react-native-firebase/firestore';
 
 const ListTable = () => {
     const appContext = useContext(AppContextProvider)
@@ -20,101 +19,134 @@ const ListTable = () => {
     const [tablesData, setTablesDtata] = useState<any>([])
     const [loading, setLoading] = useState(true)
     const [refresh, setRefresh] = useState(false)
-    const [data, setData] = useState<any>([])
 
     useEffect(() => {
-        console.log(appContext.user)
-        const collectionRef = firestore().collection('orders')
-        let query: FirebaseFirestoreTypes.Query = collectionRef
-        let filters:any = [{
-            field: 'status',
-            operator: '!=',
-            value: 'CompleteClosure'
-        },{
-            field:"waiter.uid",
-            operator:"==",
-            value: appContext.user?.uid ?? ""
-        }]
-        filters.forEach((filter:any) => {
-            query = query.where(filter.field, filter.operator, filter.value)
-        })
-        const unsubscribe = query.onSnapshot((querySnapshot: any) => {
-            const items: any = [];
-            console.log('Total tables: ', querySnapshot?.size)
-            if (!querySnapshot?.empty) {
-                querySnapshot?.forEach((doc: any) => {
-                    console.log(doc.id)
-                    items.push({
-                        id: doc.id,
-                        ...doc.data()
-                    });
-                });
-            }
-            setData(items)
-        });
-        setLoading(false)
-  
-    //   return () => unsubscribe();
+        onLoad()
     }, [])
 
     const getDataInitial = async (signal: AbortSignal) => {
         try {
             let response = await apiGetData({
-                url: ENV.API_URL + ENV.ENDPOINTS.tables,
-                params: {
-                    waiterKey: 'eTqiuoNGyub3kj6WKV62MAM6bCe2',
-                    orderTableNum: 'desc'
-                },
+                url: ENV.API_URL + ENV.ENDPOINTS.orders,
+                params: {  orderCreation: 'desc' },
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwibmFtZSI6IkFkbWluaXN0cmFkb3IiLCJsYXN0TmFtZSI6IlNpc3RlbWEiLCJlbWFpbCI6ImFkbWluQHByZW10ZS5jb20iLCJSb2xfaWQiOiJBZG1pbiIsImlzQWN0aXZlIjp0cnVlLCJpc0RlbGV0ZWQiOmZhbHNlLCJvdHBUb2tlbiI6bnVsbCwidHlwZSI6ImxvZ2luIiwiY3JlYXRlZCI6IjIwMjQtMTEtMTFUMjE6MzY6MTAuMjY1WiIsInZhbGlkIjp0cnVlLCJpYXQiOjE3MzEzNjA5NzB9.G5sqkIy8NY_8Ng4w1_DtQ8wRcPZmY-SoJfn-SMuDMDE' 
+                    'Authorization': 'Bearer ' + appContext.user?.token
                 },
                 signal: signal,
                 setLoader: setLoading
             })
     
-            if ( !response.error ) {
-                setTablesDtata(response.data.data)
-            } else {
-                console.log('Error al obtener los datos')
+            if ( !response.error ) setTablesDtata(response.data.data)
+            else {
+                appContext.setSnackNotification({
+                    open: true,
+                    message: response.message ?? "No se lograron obtener las ordenes.",
+                    type: "error"
+                })
             }
             setRefresh(false)
 
         } catch (error:any) {
             console.log('Error al obtener los datos ', error.message)
+            appContext.setSnackNotification({
+                open: true,
+                message: "No se pudo completar el proceso de la solicitud de la solicitud inicial, revise la conexion a internet.",
+                type: "error"
+            })
         }
     }
 
 
-    const navigatToDetailsOrder = ( item: any ) => {
-        appContext.setOrder({
+    const navigatToDetailsOrder = async ( item: any ) => {
+        let orderSelected = await apiGetData({
+            url: ENV.API_URL + ENV.ENDPOINTS.orders,
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + appContext.user?.token
+            },
+            params: {
+                uid: item.uid
+            },
+            setLoader: appContext.setLoader
+        })
+        let data = orderSelected.data?.data[0] ?? null
+        if ( orderSelected.error || data === null) {
+            appContext.setSnackNotification({
+                open: true,
+                message: orderSelected.message ?? "Orden guardada",
+                type: "error"
+            })
+            return
+        }
+
+        appContext.setOrder(()=>({
             tablenumber: item.id,
             products: [],
-            clientName: '',
+            clientName: data.clientName ?? "",
             subTotal: 0,
             discount: 0,
             tip: 0,
             tipCash: 0,
             taxes: 0,
+            id: data.uid || data.id,
+            number: '',
             total: 0,
             typeDocument: "TKT",
-            discountCash: 0,
-            status: '',
+            discountCash: 0, 
+            status: data.status ?? "",
             subTotalWithDiscount: 0,
             typePayment: ''
-        })
+        }))
+        data.dishes?.map((item:any)=> {
+            let dishOrder ={
+                area: item.area ?? "",
+                visible: item.visible ?? true,
+                priceBackup: item.price ?? 0,
+                description: item.description ?? "",
+                discount: item.discount ?? false,
+                canEdit: item.dishStatus !== "delivered" ? true : false,
+                status: item.dishStatus ?? "",
+                inventory: item.inventory ?? 0,
+                uid: item.uid ?? "",
+                supplies: item.supplies ?? [],
+                name: item.name ?? "",
+                time: item.time ?? 0,
+                category: item.category ?? "",
+                kitchen: item.kitchen ?? "",
+                fatherCategory: item.fatherCategory ?? "",
+                image: item.image ?? "",
+                price: item.price ?? 0,
+                id: item.uid ?? "",
+                quantity: item.quantity ?? 0,
+                totalLine: item.totalLine ?? 0,
+                type: item.type ?? "",
+                notes: item.notes ?? "",
+                extras: item.extras ?? [],
+                priceWithTaxes: item.priceWithTaxes ?? 0,
+            }
+            // Ordenamiento para los tipos de dishes
+            if ( item.orderToServe === "plato fuerte" ) dishOrder.type = "dish"
+            if ( item.orderToServe === "entrada" ) dishOrder.type = "entrance"
+            if ( item.orderToServe === "final" ) dishOrder.type = "dessert"
+            // Agrega los productos
+            appContext.addDish(dishOrder)
+        }) 
         navigation.navigate('ListDishes')
     }
 
 
     const refreshHandle = ( ) => {
         setRefresh(true)
+        onLoad()
+    }
+
+    const onLoad = () => {
         const signal = new AbortController()
         getDataInitial(signal.signal)
         return () => signal.abort()
     }
 
-    
     return (
         <SafeAreaView style={[ BaseStyles.safeArea ]}>
             <View style={[ BaseStyles.body ]}>
@@ -126,7 +158,7 @@ const ListTable = () => {
                             :
                             <>
                                 {
-                                    data?.map((item:any, index:number) => (
+                                    tablesData?.map((item:any, index:number) => (
                                         <CardTable 
                                             key={index} 
                                             table={item}

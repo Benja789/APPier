@@ -46,7 +46,6 @@ const ModalChangeDocument = ( ) => {
 
     // Metodo para el cambio de tipo de documento
     const handleChangeDocument = (type: any) => {
-        console.log(type)
         setDocumentSelected(type)
     }
 

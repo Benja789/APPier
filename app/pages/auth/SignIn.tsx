@@ -37,9 +37,8 @@ const SignIn = () => {
             setLoader: appContext.setLoader
         })
         
-        if ( response.error )  setMessage(response.data.message ?? "Error en el inicio de sesión");
+        if ( response.error ) setMessage(response.data.message ?? "Error en el inicio de sesión");
         else {
-            // console.log(response.data);
             let data = response.data.data
             appContext.setUser({
                 id: data.user.id,

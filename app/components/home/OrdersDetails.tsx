@@ -5,10 +5,60 @@ import { BaseStyles } from "../../styles/BaseStyles"
 import DishAdded from "./DishAdded"
 import { useContext } from "react"
 import { AppContextProvider } from "../../interfaces/IAppContext"
+import { apiPostData } from "../../services/api"
+import { ENV } from "../../environment/api"
+import { useNavigation } from "@react-navigation/native"
 
 const OrderDetails = () => {
     const appContext = useContext(AppContextProvider)
+    const navigate = useNavigation<any>()
 
+    const saveOrder = async() => {
+        let body: any = {
+            orderId: appContext.order?.id,
+            number: appContext.order?.number,
+            products: [],
+            typeDocument: appContext.order?.typeDocument,
+        }
+
+        body.products = appContext.order?.products.map((dish) => ({
+                id: dish.id,
+                quantity: dish.quantity,
+                type: dish.type,
+                status: dish.status,
+                notes: dish.notes
+            }
+        ))
+
+        let response = await apiPostData({
+            url: ENV.API_URL + ENV.ENDPOINTS.orders,
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + appContext.user?.token
+            },
+            body: body,
+            setLoader: appContext.setLoader
+        })
+        if ( !response.error ) {
+            navigate.goBack()
+            appContext.setSnackNotification({
+                open: true,
+                message: response.message ?? "Orden guardada y enviada a cocina.",
+                type: "success",
+                callBack: () => {
+                    appContext.setOrder(null)
+
+                }
+            })
+        } else {
+            appContext.setSnackNotification({
+                open: true,
+                message: response.message ?? "No se logro guardar la orden.",
+                type: "error"
+            })
+        }
+    }
+    
     return (
         <View style={ OrderDetailsStyles.container }>
             <Text style={[ BaseStyles.textTitleH1 ]}>Detalles de la orden</Text>
@@ -20,7 +70,6 @@ const OrderDetails = () => {
                             dish={dish}/>
                     ))
                 }
-
                 <View style={{ height: 290}}></View>
             </ScrollView>
             <View style={[ OrderDetailsStyles.buttonContainer ]}>
@@ -61,7 +110,7 @@ const OrderDetails = () => {
                 <Button 
                     text="Guardar"
                     buttonStyle={OrderDetailsStyles.button}
-                    callBack={()=>{}}/>
+                    callBack={saveOrder}/>
             </View>
         </View>
     )

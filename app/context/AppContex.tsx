@@ -81,10 +81,13 @@ const AppContext = ( { children }: Props ) => {
                     products: [...prevState.products]
                 }
 
-                let flag =  order.products.findIndex((product) => product.uid === dish.uid)
+                let flag =  order.products.findIndex((product) => product.uid === dish.uid && product.canEdit)
                 if (flag !== -1) {
-                    order.products[flag].quantity = order.products[flag].quantity + dish.quantity
-                    order.products[flag].totalLine = Math.round((order.products[flag].price * order.products[flag].quantity) * 100) / 100
+                    if ( dish.status === "delivered" ) order.products.push(dish) 
+                    else {
+                        order.products[flag].quantity = order.products[flag].quantity + dish.quantity
+                        order.products[flag].totalLine = Math.round((order.products[flag].price * order.products[flag].quantity) * 100) / 100
+                    }
                 } else {
                     order.products.push(dish)
                 }
@@ -101,7 +104,7 @@ const AppContext = ( { children }: Props ) => {
                     ...prevState,
                     products: [...prevState.products]
                 }
-                let flag =  order.products.findIndex((product) => product.uid === dish.uid)
+                let flag =  order.products.findIndex((product) => product.uid === dish.uid && product.canEdit)
                 if (flag !== -1) {
                     order.products.splice(flag, 1)
                 }
@@ -120,7 +123,12 @@ const AppContext = ( { children }: Props ) => {
                 }
                 let flag =  order.products.findIndex((product) => product.uid === dish.uid)
                 if (flag !== -1) {
-                    order.products[flag] = dish
+                    if ( order.products[flag].status === "delivered" ) order.products.push({
+                        ...dish,
+                        canEdit: true,
+                        status: "edition",
+                    })
+                    else order.products[flag] = dish
                 }
                 return order
             })
@@ -135,7 +143,7 @@ const AppContext = ( { children }: Props ) => {
                     ...prevState,
                     products: [...prevState.products]
                 }
-                let flag =  order.products.findIndex((product) => product.uid === dish.uid)
+                let flag =  order.products.findIndex((product) => product.uid === dish.uid && product.canEdit)
                 if (flag !== -1) {
                     let quantity = order.products[flag].quantity
                     if (type === '+') quantity++

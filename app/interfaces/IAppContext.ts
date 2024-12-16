@@ -22,6 +22,8 @@ export interface IOrder {
     tipCash: number
     total: number
     status: string
+    id: any
+    number: any
     typePayment: string
     typeDocument: "COF" | "CRF" | "TKT" | "IVAEXE"
 }

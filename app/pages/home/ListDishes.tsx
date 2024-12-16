@@ -54,7 +54,6 @@ const ListDishes = () => {
     const [dishSelected, setDishSelected] = useState<any>({})
     const [loading, setLoading] = useState(true)
     const [refresh, setRefresh] = useState(false)
-    const [openChangeDocument, setOpenChangeDocument] = useState(false)
 
     useEffect(()=> {
         const controller = new AbortController()
@@ -108,12 +107,19 @@ const ListDishes = () => {
             params: params,
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwibmFtZSI6IkFkbWluaXN0cmFkb3IiLCJsYXN0TmFtZSI6IlNpc3RlbWEiLCJlbWFpbCI6ImFkbWluQHByZW10ZS5jb20iLCJSb2xfaWQiOiJBZG1pbiIsImlzQWN0aXZlIjp0cnVlLCJpc0RlbGV0ZWQiOmZhbHNlLCJvdHBUb2tlbiI6bnVsbCwidHlwZSI6ImxvZ2luIiwiY3JlYXRlZCI6IjIwMjQtMTEtMTFUMjE6MzY6MTAuMjY1WiIsInZhbGlkIjp0cnVlLCJpYXQiOjE3MzEzNjA5NzB9.G5sqkIy8NY_8Ng4w1_DtQ8wRcPZmY-SoJfn-SMuDMDE' 
+                'Authorization': 'Bearer ' + appContext.user?.token 
             },
             signal: signal,
             setLoader: setLoading
         })
         if (!response.error) setDishesData(() => response.data.data)
+        else {
+            appContext.setSnackNotification({
+                open: true,
+                message: response.message ?? "No se lograron obtener los platillos.",
+                type: "error"
+            })
+        }
     }
 
     const refreshHandle = () => {
@@ -130,10 +136,16 @@ const ListDishes = () => {
     
     const openModalAddDish = (dish: any) => {
         setOpen(true)
-        setDishSelected((prev: any)=>{
+        setDishSelected(()=>{
             let findDish = appContext.order?.products.find((product) => product.uid === dish.uid)
             if ( findDish ) { 
-                return findDish
+                if ( findDish.status === "delivered" ) {
+                    return{
+                        ...dish,
+                        quantity: 1,
+                        totalLine: dish.price
+                    }
+                } else return findDish
             } else {
                 return{
                     ...dish,

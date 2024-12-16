@@ -8,7 +8,6 @@ import Button from "../Base/Button";
 import { DishAddedStyles } from "../../styles/components/DishAddedStyles";
 import { AppContextProvider } from "../../interfaces/IAppContext";
 
-
 interface IModalAddDish {
     open: boolean;
     setOpen: (open: boolean) => void;
@@ -33,12 +32,20 @@ const ModalAddDish = (props: IModalAddDish) => {
     useEffect(()=>{
         if ( open ) {
             let dishFind = appContext.order?.products?.find((item:any)=> item.uid === dish.uid)
-            setDishFind(dishFind)
-            setDishOptions({
-                type: dishFind?.type ?? "",
-                notes: dishFind?.notes ?? "",
-                extras: dishFind?.extras ?? []
-            })
+            if ( dishFind?.status !== "delivered" ) {
+                setDishFind(dishFind)
+                setDishOptions({
+                    type: dishFind?.type ?? "",
+                    notes: dishFind?.notes ?? "",
+                    extras: dishFind?.extras ?? []
+                })
+            } else {
+                setDishOptions({
+                    type: "",
+                    notes: "",
+                    extras: []
+                })
+            }
         }
     }, [open])
 
@@ -58,7 +65,7 @@ const ModalAddDish = (props: IModalAddDish) => {
         setDish({})
     }
 
-    // Metood para cambiar el tipo de plato
+    // Metodo para cambiar el tipo de plato
     const changeOrderDish = (type: string) => {
         setMessageError((prev:any)=>({
             ...prev,
@@ -74,11 +81,9 @@ const ModalAddDish = (props: IModalAddDish) => {
     const changeQuantity = (type: '-' | '+') => {
         setDish((prev:any)=>{
             let quantity = prev.quantity
-            if (type === '+') {
-                quantity++
-            } else {
-                quantity--
-            }
+            if (type === '+') quantity++
+            else quantity--
+
             if ( quantity == 0 ) {
                 appContext.deleteDish(prev)
                 closeModal()
@@ -110,6 +115,8 @@ const ModalAddDish = (props: IModalAddDish) => {
         } else {
             appContext.addDish({
                 ...dish,
+                canEdit: true,
+                status: "edition",
                 ...dishOptions
             })
         }
