@@ -153,7 +153,18 @@ const AppContext = ( { children }: Props ) => {
                     if (type === '+') quantity++
                     else quantity--
 
-                    if ( quantity == 0 ) order.products.splice(flag, 1)
+                    if ( quantity == 0 ) {
+                        // order.products.splice(flag, 1)
+                        setModalNotification({
+                            open: true,
+                            title: `¿Deseas eliminar ${dish.quantity} productos de "${dish.name}"?`,
+                            message: "¿Estas seguro de eliminar el platillo?",
+                            type: "warning",
+                            callBack: () => deleteDish(dish),
+                            showAgree: true,
+                            showDisagree: true
+                        })
+                    }
                     else {
                         order.products[flag].quantity = quantity
                         order.products[flag].totalLine = Math.round((order.products[flag].price * quantity) * 100) / 100

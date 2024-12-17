@@ -10,11 +10,20 @@ export const ButtonStyle = StyleSheet.create({
     },
     text: {
         color: Colors.buttonText,
-        textAlign: 'center',
         fontFamily: 'Poppins-Bold',
         fontSize: 15,
     },
     disabled: {
         backgroundColor: Colors.shadowColor
+    },
+    icon: {
+        width: 25,
+        height: 25,
+    },
+    textContainer: {
+        flexDirection: 'row',
+        gap: 10,
+        alignItems: 'center',
+        justifyContent: 'center',
     }
 })

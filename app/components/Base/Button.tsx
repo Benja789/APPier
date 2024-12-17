@@ -1,4 +1,4 @@
-import { Text, TouchableOpacity } from "react-native";
+import { Image, Text, TouchableOpacity, View } from "react-native";
 
 // Estilos
 import { ButtonStyle } from "../../styles/base/ButtonStyle";
@@ -8,10 +8,11 @@ interface IButtonProps {
     callBack: () => void;
     textStyle?: object;
     disabled?: boolean;
+    icon?: any;
     buttonStyle?: object;
 }
 const Button = ( props: IButtonProps ) => {
-    const { text, callBack, textStyle, buttonStyle, disabled } = props;
+    const { text, callBack, textStyle, buttonStyle, disabled, icon } = props;
     return (
         <TouchableOpacity 
             style={[
@@ -21,9 +22,15 @@ const Button = ( props: IButtonProps ) => {
             ]} 
             disabled={disabled}
             onPress={callBack}>
-            <Text style={[ ButtonStyle.text, textStyle ]}>
-                { text }
-            </Text>
+            <View style={[ButtonStyle.textContainer]}>
+                { 
+                    icon && 
+                    <Image source={ icon } style={ButtonStyle.icon} />
+                }
+                <Text style={[ ButtonStyle.text, textStyle ]}>
+                    { text }
+                </Text>
+            </View>
         </TouchableOpacity>
     )
 }

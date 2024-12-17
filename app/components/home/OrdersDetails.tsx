@@ -46,7 +46,6 @@ const OrderDetails = ( props: IOrderDetailsProps ) => {
             body: body,
             setLoader: appContext.setLoader
         })
-        console.log(JSON.stringify(response))
         if ( !response.error ) {
             navigate.goBack()
             appContext.setSnackNotification({

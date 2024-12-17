@@ -107,7 +107,7 @@ export const BaseStyles = StyleSheet.create({
         paddingHorizontal: 20,
         margin: "auto",
         width: "80%",
-		shadowColor: '#000',
+		shadowColor: Colors.black,
 		shadowOffset: {
 			width: 0,
 			height: 0
@@ -117,5 +117,18 @@ export const BaseStyles = StyleSheet.create({
 		elevation: 5,
 	},
 
-    
+    // Boton cancelar
+    buttonCancel: {
+        backgroundColor: Colors.background,
+        borderColor: Colors.primary,
+        borderWidth: 1,
+        padding: 10,
+        margin: 10,
+        borderRadius: 5,
+        width: 150,
+    },
+    textButtonCancel: {
+        color: Colors.primary,
+        fontFamily: 'Poppins-Bold',
+    }
 })

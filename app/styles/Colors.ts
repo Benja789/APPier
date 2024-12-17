@@ -12,4 +12,6 @@ export const Colors = {
     error: "#d92525",
     warning: "#faac25",
     info: "#1c8ac8",
+
+    black: "#000",
 }

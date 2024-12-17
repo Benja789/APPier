@@ -11,6 +11,7 @@ import Loader from './app/components/Base/Loader';
 // import { getApps } from '@react-native-firebase/app';
 import SnackNotification from './app/components/Base/SnackNotification';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import ModalConfirmation from './app/components/Base/ModalConfirmation';
 
 
 const Stack = createNativeStackNavigator();
@@ -25,6 +26,7 @@ const App = () => {
 			<AppContext>
 				<Loader />
 				<SnackNotification />
+				<ModalConfirmation />
 				<StatusBar animated={false} backgroundColor="#FFF" barStyle="dark-content" />
 				<NavigationContainer>
 					<Stack.Navigator initialRouteName="Auth">

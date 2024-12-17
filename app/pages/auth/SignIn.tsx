@@ -2,7 +2,7 @@ import { useContext, useState } from "react";
 import { Text, View, TextInput, Image, KeyboardAvoidingView, Platform, ScrollView } from "react-native"
 import { CommonActions, useNavigation } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context"
-import { AppContextProvider, IContext } from "../../interfaces/IAppContext";
+import { AppContextProvider } from "../../interfaces/IAppContext";
 
 // Componentes
 import Button from "../../components/Base/Button";
@@ -96,11 +96,6 @@ const SignIn = () => {
                                 <TextInput
                                     keyboardType="numeric"
                                     value={code}
-                                    // onKeyPress={(key)=>{
-                                    //     if(key.nativeEvent.key == "Enter"){
-                                    //         loginApp();
-                                    //     }
-                                    // }}
                                     onChangeText={(text) => onChangeText(text)}
                                     style={[BaseStyles.inputText, SignInStyle.inputCode]} />
                                 {

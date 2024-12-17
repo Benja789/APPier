@@ -18,5 +18,17 @@ export const DishAddedStyles = StyleSheet.create({
         borderWidth: 1,
         borderColor: '#E5E5E5',
         borderStyle: 'dotted',
+    },
+    buttonDelete: {
+        backgroundColor: '#fce8ea',
+        padding: 10,
+        borderRadius: 5,
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: 140,
+        height: 40,
+    },
+    textButtonDelete: {
+        color: '#d8414e'
     }
 })

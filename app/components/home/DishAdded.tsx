@@ -2,8 +2,7 @@ import { Text, View } from "react-native"
 import { BaseStyles } from "../../styles/BaseStyles"
 import Button from "../Base/Button"
 import { DishAddedStyles } from "../../styles/components/DishAddedStyles"
-import IconButton from "../Base/IconButton"
-import { useContext, useEffect } from "react"
+import { useContext } from "react"
 import { AppContextProvider } from "../../interfaces/IAppContext"
 
 interface IDishAddedProps {
@@ -17,7 +16,16 @@ const DishAdded = ( props: IDishAddedProps ) => {
 
     // Metodo para eliminar un producto de la orden
     const deleteDish = () => {
-        appContext.deleteDish(dish)
+        appContext.setModalNotification({
+            open: true,
+            title: `¿Deseas eliminar ${dish.quantity} productos de "${dish.name}"?`,
+            message: "¿Estas seguro de eliminar el platillo?",
+            type: "warning",
+            callBack: () => appContext.deleteDish(dish),
+            showAgree: true,
+            showDisagree: true
+        })
+        // appContext.deleteDish(dish)
     }
 
     // Metodo para cambiar las cantidades de los platos
@@ -39,19 +47,20 @@ const DishAdded = ( props: IDishAddedProps ) => {
 
     return (
         <View style={ DishAddedStyles.cardDish}>
-            <View style={[ DishAddedStyles.containerButton ]}>
-                <View style={{ width:"85%"}}>
-                    <Text style={[BaseStyles.textTitleH3, { fontSize: 13 }]}>{ getLabel() }</Text>
-                    <Text style={[BaseStyles.textP, { fontSize: 12 }]}>{ dish.description ?? "" }</Text>
-                   
-                </View>
-                {
-                    dish.status !== "delivered" &&
-                        <IconButton
-                            icon={require("../../assets/icons/delete.png")}
-                            callBack={()=> deleteDish()}/>
-                }
+            <View style={{ width:"85%"}}>
+                <Text style={[BaseStyles.textTitleH3, { fontSize: 13 }]}>{ getLabel() }</Text>
+                <Text style={[BaseStyles.textP, { fontSize: 12 }]}>{ dish.description ?? "" }</Text>
+                
             </View>
+            {
+                dish.status !== "delivered" &&
+                    <Button
+                        text="Eliminar"
+                        buttonStyle={ DishAddedStyles.buttonDelete }
+                        textStyle={ DishAddedStyles.textButtonDelete }
+                        icon={require("../../assets/icons/delete-red.png")}
+                        callBack={()=> deleteDish()}/>
+            }
 
             <View style={[ DishAddedStyles.notesBox]}>
                 <Text style={[BaseStyles.textTitleH1, { fontSize: 12 }]}>Notas</Text>
