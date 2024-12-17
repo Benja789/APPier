@@ -3,15 +3,22 @@ import { OrderDetailsStyles } from "../../styles/components/OrderDetailsStyles"
 import Button from "../Base/Button"
 import { BaseStyles } from "../../styles/BaseStyles"
 import DishAdded from "./DishAdded"
-import { useContext } from "react"
+import { useContext, useEffect } from "react"
 import { AppContextProvider } from "../../interfaces/IAppContext"
 import { apiPostData } from "../../services/api"
 import { ENV } from "../../environment/api"
 import { useNavigation } from "@react-navigation/native"
 
-const OrderDetails = () => {
+interface IOrderDetailsProps {
+    loader: boolean
+}
+const OrderDetails = ( props: IOrderDetailsProps ) => {
+    const { loader } = props
     const appContext = useContext(AppContextProvider)
     const navigate = useNavigation<any>()
+
+    useEffect(() => {
+    }, [])
 
     const saveOrder = async() => {
         let body: any = {
@@ -39,6 +46,7 @@ const OrderDetails = () => {
             body: body,
             setLoader: appContext.setLoader
         })
+        console.log(JSON.stringify(response))
         if ( !response.error ) {
             navigate.goBack()
             appContext.setSnackNotification({
@@ -109,6 +117,7 @@ const OrderDetails = () => {
                 </View>
                 <Button 
                     text="Guardar"
+                    disabled={ loader }
                     buttonStyle={OrderDetailsStyles.button}
                     callBack={saveOrder}/>
             </View>

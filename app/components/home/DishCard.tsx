@@ -2,7 +2,7 @@ import { Image, Text, TouchableOpacity, View } from "react-native"
 import { BaseStyles } from "../../styles/BaseStyles"
 import Button from "../Base/Button"
 import { ListDishesStyles } from "../../styles/pages/ListDishesStyles"
-import { useContext } from "react"
+import { useContext, useEffect, useState } from "react"
 import { AppContextProvider } from "../../interfaces/IAppContext"
 
 interface IPropsDischCard { 
@@ -13,6 +13,14 @@ interface IPropsDischCard {
 const DishCard = ( props: IPropsDischCard ) => {
     const { dish, callBack, callBackDetails} = props
     const appContext = useContext(AppContextProvider)
+    const [labelButton, setLabeLButton] = useState("Agregar")
+
+    useEffect(()=> {
+        let exist = appContext.order?.products.find((product) => product.id === dish.id && product.canEdit)
+        if ( exist ) setLabeLButton(`Añadir más (${exist.quantity})`)
+        else setLabeLButton("Agregar")
+    },[appContext.order?.products])
+    
 
     return (
         <View style={[BaseStyles.cardContainer, BaseStyles.shadow, ListDishesStyles.baseCard]}>
@@ -32,7 +40,7 @@ const DishCard = ( props: IPropsDischCard ) => {
                 </View>
                 <Text style={[ BaseStyles.textTitleH3, { fontSize: 13, textAlign: 'center' } ]}>$ { appContext.formatedPrice(dish.price ?? 0) ?? "" }</Text>
                 <Button 
-                    text="Agregar" 
+                    text={labelButton}
                     buttonStyle={{ 
                         width: "80%"
                     }}

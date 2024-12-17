@@ -7,12 +7,20 @@ interface IButtonProps {
     text?: string;
     callBack: () => void;
     textStyle?: object;
+    disabled?: boolean;
     buttonStyle?: object;
 }
 const Button = ( props: IButtonProps ) => {
-    const { text, callBack, textStyle, buttonStyle } = props;
+    const { text, callBack, textStyle, buttonStyle, disabled } = props;
     return (
-        <TouchableOpacity style={[ButtonStyle.button, buttonStyle ]} onPress={callBack} >
+        <TouchableOpacity 
+            style={[
+                ButtonStyle.button, 
+                buttonStyle,
+                disabled === true ? ButtonStyle.disabled : {}
+            ]} 
+            disabled={disabled}
+            onPress={callBack}>
             <Text style={[ ButtonStyle.text, textStyle ]}>
                 { text }
             </Text>

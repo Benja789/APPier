@@ -57,7 +57,6 @@ const ListTable = () => {
         }
     }
 
-
     const navigatToDetailsOrder = async ( item: any ) => {
         let orderSelected = await apiGetData({
             url: ENV.API_URL + ENV.ENDPOINTS.orders,
@@ -80,58 +79,61 @@ const ListTable = () => {
             return
         }
 
-        appContext.setOrder(()=>({
-            tablenumber: item.id,
-            products: [],
-            clientName: data.clientName ?? "",
-            subTotal: 0,
-            discount: 0,
-            tip: 0,
-            tipCash: 0,
-            taxes: 0,
-            id: data.uid || data.id,
-            number: '',
-            total: 0,
-            typeDocument: "TKT",
-            discountCash: 0, 
-            status: data.status ?? "",
-            subTotalWithDiscount: 0,
-            typePayment: ''
-        }))
-        data.dishes?.map((item:any)=> {
-            let dishOrder ={
-                area: item.area ?? "",
-                visible: item.visible ?? true,
-                priceBackup: item.price ?? 0,
-                description: item.description ?? "",
-                discount: item.discount ?? false,
-                canEdit: item.dishStatus !== "delivered" ? true : false,
-                status: item.dishStatus ?? "",
-                inventory: item.inventory ?? 0,
-                uid: item.uid ?? "",
-                supplies: item.supplies ?? [],
-                name: item.name ?? "",
-                time: item.time ?? 0,
-                category: item.category ?? "",
-                kitchen: item.kitchen ?? "",
-                fatherCategory: item.fatherCategory ?? "",
-                image: item.image ?? "",
-                price: item.price ?? 0,
-                id: item.uid ?? "",
-                quantity: item.quantity ?? 0,
-                totalLine: item.totalLine ?? 0,
-                type: item.type ?? "",
-                notes: item.notes ?? "",
-                extras: item.extras ?? [],
-                priceWithTaxes: item.priceWithTaxes ?? 0,
+        appContext.setOrder(()=>{
+            let products =  data.dishes?.map((item:any)=> {
+                let dishOrder ={
+                    area: item.area ?? "",
+                    visible: item.visible ?? true,
+                    priceBackup: item.price ?? 0,
+                    description: item.description ?? "",
+                    discount: item.discount ?? false,
+                    canEdit: item.dishStatus !== "delivered" ? true : false,
+                    status: item.dishStatus ?? "",
+                    inventory: item.inventory ?? 0,
+                    uid: item.uid ?? "",
+                    supplies: item.supplies ?? [],
+                    name: item.name ?? "",
+                    time: item.time ?? 0,
+                    category: item.category ?? "",
+                    kitchen: item.kitchen ?? "",
+                    fatherCategory: item.fatherCategory ?? "",
+                    image: item.image ?? "",
+                    price: item.price ?? 0,
+                    id: item.uid ?? "",
+                    quantity: item.quantity ?? 0,
+                    totalLine: item.totalLine ?? 0,
+                    type: item.type ?? "",
+                    notes: item.notes ?? "",
+                    extras: item.extras ?? [],
+                    priceWithTaxes: item.priceWithTaxes ?? 0,
+                }
+                // Ordenamiento para los tipos de dishes
+                if ( item.orderToServe === "plato fuerte" ) dishOrder.type = "dish"
+                if ( item.orderToServe === "entrada" ) dishOrder.type = "entrance"
+                if ( item.orderToServe === "final" ) dishOrder.type = "dessert"
+                // Agrega los productos
+                return dishOrder
+            }) 
+            return {
+                tablenumber: item.id,
+                products: products,
+                clientName: data.clientName ?? "",
+                subTotal: 0,
+                discount: 0,
+                tip: 0,
+                tipCash: 0,
+                taxes: 0,
+                id: data.uid || data.id,
+                number: '',
+                total: 0,
+                typeDocument: "TKT",
+                discountCash: 0, 
+                status: data.status ?? "",
+                subTotalWithDiscount: 0,
+                typePayment: ''
             }
-            // Ordenamiento para los tipos de dishes
-            if ( item.orderToServe === "plato fuerte" ) dishOrder.type = "dish"
-            if ( item.orderToServe === "entrada" ) dishOrder.type = "entrance"
-            if ( item.orderToServe === "final" ) dishOrder.type = "dessert"
-            // Agrega los productos
-            appContext.addDish(dishOrder)
-        }) 
+        })
+       
         navigation.navigate('ListDishes')
     }
 
@@ -142,6 +144,7 @@ const ListTable = () => {
     }
 
     const onLoad = () => {
+        appContext.setOrder(()=>null)
         const signal = new AbortController()
         getDataInitial(signal.signal)
         return () => signal.abort()

@@ -4,7 +4,7 @@ import ListDishes from '../pages/home/ListDishes';
 import AppBar from '../components/Base/AppBar';
 import { useContext, useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
-import { BackHandler, DrawerLayoutAndroid, StyleSheet } from 'react-native';
+import { BackHandler, DrawerLayoutAndroid, SafeAreaView, StyleSheet } from 'react-native';
 import { AppContextProvider } from '../interfaces/IAppContext';
 import OrderDetails from '../components/home/OrdersDetails';
 
@@ -15,6 +15,7 @@ const HomeRouter = () => {
     const context = useContext(AppContextProvider);
     const [changesApp, setChangesApp] = useState({
         title: "Selecciona una mesa",
+        subTitle: `${context.user?.name} - ${context.user?.email}`,
         showMenu: false,
         showReports: false,
         showBackButton: false,
@@ -30,6 +31,7 @@ const HomeRouter = () => {
                     setTimeout(() => {
                         setChangesApp({
                             title: "Selecciona una mesa",
+                            subTitle: `${context.user?.name} - ${context.user?.email}`,
                             showMenu: false,
                             showReports: false,
                             showChangeDocument: false,
@@ -40,8 +42,14 @@ const HomeRouter = () => {
                     break;
                 case 1:
                     setTimeout(() => {
+                        let typeDocument = ''
+                        if ( context.order?.typeDocument === 'TKT' ) typeDocument = 'Ticket'
+                        if ( context.order?.typeDocument === 'CRF' ) typeDocument = 'Credito Fiscal'
+                        if ( context.order?.typeDocument === 'COF' ) typeDocument = 'Consumidor Final'
+                        if ( context.order?.typeDocument === 'IVAEXE' ) typeDocument = 'Excento de IVA'
                         setChangesApp({
                             title: "Lista de Platos",
+                            subTitle: typeDocument,
                             showMenu: false,
                             showReports: false,
                             showBackButton: true,
@@ -53,6 +61,7 @@ const HomeRouter = () => {
                 case undefined:
                     setChangesApp({
                         title: "Selecciona una mesa",
+                        subTitle: `${context.user?.name} - ${context.user?.email}`,
                         showMenu: false,
                         showReports: false,
                         showChangeDocument: false,
@@ -63,6 +72,7 @@ const HomeRouter = () => {
                 default:
                     setChangesApp({
                         title: "App",
+                        subTitle: ``,
                         showMenu: false,
                         showReports: false,
                         showChangeDocument: false,
@@ -96,7 +106,7 @@ const HomeRouter = () => {
     }
 
     return (
-        <>
+        <SafeAreaView style={{flex: 1}}>
             {/* <NavigationContainer> */}
             {/* <DrawerLayoutAndroid
                 ref={context.drawer}
@@ -108,7 +118,7 @@ const HomeRouter = () => {
                     <AuthStack.Screen name="ListDishes" component={ListDishes} options={baseOptions} />
                 </AuthStack.Navigator>
             {/* </DrawerLayoutAndroid> */}
-        </>
+        </SafeAreaView>
     )
 }
 

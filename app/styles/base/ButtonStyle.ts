@@ -13,5 +13,8 @@ export const ButtonStyle = StyleSheet.create({
         textAlign: 'center',
         fontFamily: 'Poppins-Bold',
         fontSize: 15,
+    },
+    disabled: {
+        backgroundColor: Colors.shadowColor
     }
 })

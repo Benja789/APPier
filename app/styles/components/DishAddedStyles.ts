@@ -11,5 +11,12 @@ export const DishAddedStyles = StyleSheet.create({
     cardDish: {
         borderBottomWidth: 1,
         borderBottomColor: '#E5E5E5',
+    },
+    notesBox: {
+        marginVertical: 10,
+        padding: 10,
+        borderWidth: 1,
+        borderColor: '#E5E5E5',
+        borderStyle: 'dotted',
     }
 })

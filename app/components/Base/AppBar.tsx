@@ -8,11 +8,12 @@ import IconButton from "../../components/Base/IconButton"
 import { AppbarStyles } from "../../styles/components/AppbarStyles"
 import { BaseStyles } from "../../styles/BaseStyles"
 import Button from "./Button"
-import { useContext } from "react"
+import { useContext, useEffect, useState } from "react"
 import { AppContextProvider } from "../../interfaces/IAppContext"
 
 interface IAppBar {
     title: string
+    subTitle?: string
     showReports: boolean
     showLogout: boolean
     showMenu: boolean
@@ -24,6 +25,7 @@ interface IAppBar {
 const AppBar = ( props: IAppBar ) => {
     const { 
         title, 
+        subTitle,
         showReports, 
         showLogout, 
         showBackButton, 
@@ -33,8 +35,19 @@ const AppBar = ( props: IAppBar ) => {
     } = props
     const appContext = useContext(AppContextProvider)
     const navigate = useNavigation<any>()
+    const [typeDocument, setTypeDocument] = useState<string>(appContext.order?.typeDocument ?? '')
 
+    useEffect(()=> {
+        if ( appContext.order?.typeDocument === 'TKT' ) setTypeDocument('Ticket')
+        if ( appContext.order?.typeDocument === 'CRF' ) setTypeDocument('Credito Fiscal')
+        if ( appContext.order?.typeDocument === 'COF' ) setTypeDocument('Consumidor Final')
+        if ( appContext.order?.typeDocument === 'IVAEXE' ) setTypeDocument('Excento de IVA')
+    }, [appContext.order?.typeDocument])
+
+    // Metodo para cerrar sesion
     const logout = () => {
+        appContext.setUser(null)
+        appContext.setOrder(null)
         navigate.dispatch(
             CommonActions.reset({
                 index: 0,
@@ -45,18 +58,21 @@ const AppBar = ( props: IAppBar ) => {
         )
     }
 
+    // Posterior, muestra el Drawer o menu lateral
     const showDrawer = () => {
         navigate.dispatch(
             DrawerActions.toggleDrawer()
         )
     }
 
+    // Metodo para devolver a atras
     const goBack = () => {
         navigate.dispatch(
             CommonActions.goBack()
         )
     }
 
+    // Metodo para mostrar el modal de cambio de documento
     const openModalChangeDocument = () => {
         appContext.setOpenModalChangeDocument(true)
     }
@@ -71,9 +87,26 @@ const AppBar = ( props: IAppBar ) => {
                                 callBack={goBack}
                                 icon={require("../../assets/icons/arrow-left.png")}/>
                     }
-                    <Text style={[BaseStyles.textTitleH1, AppbarStyles.text ]}>
-                        { title }
-                    </Text>
+                    <View>
+                        <Text style={[BaseStyles.textTitleH1, AppbarStyles.text ]}>
+                            { title }
+                        </Text>
+                        {
+                            typeDocument !== ""  ?
+                                <View style={{ flexDirection: 'row', alignItems: 'center', alignContent: 'center', gap:10 }}>
+                                    <Text style={[BaseStyles.textTitleH3, { textAlign:"left", justifyContent:"flex-start", fontFamily: 'PoppinsRegular' } ]}>
+                                        Generando el Documento: 
+                                    </Text>
+                                    <Text style={[BaseStyles.textTitleH3, { marginTop:5 } ]}>
+                                    { typeDocument }
+                                    </Text>
+                                </View>
+                                :
+                                <Text style={[BaseStyles.textTitleH3, { fontFamily: 'PoppinsRegular' } ]}>
+                                    { subTitle }
+                                </Text>
+                        }
+                    </View>
                 </View>
                 <View style={AppbarStyles.containerIcon }>
                     {

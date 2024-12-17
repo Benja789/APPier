@@ -8,7 +8,7 @@ const AppContext = ( { children }: Props ) => {
     const [ user, setUser ] = useState<IUser | null>(null)
     const [ order, setOrder ] = useState<IOrder | null>(null)
     const [ loader, setLoader ] = useState<boolean>(false)
-    const [openModalChangeDocument, setOpenModalChangeDocument] = useState(false)
+    const [ openModalChangeDocument, setOpenModalChangeDocument ] = useState(false)
     const [ settings, setSettings ] = useState<ISettings>({
         appVersion: '0.0.1',
         numberVersion: 1
@@ -31,6 +31,7 @@ const AppContext = ( { children }: Props ) => {
     // Metodo para formatear el precio
     const formatedPrice = ( number: number ) => (Math.round(number * 100) /100 ).toFixed(2)
 
+    // Metodo para recalcular los totales
     const calculateTotals = () => { 
         if ( order ) {
             setOrder((prevState: any) => {
@@ -72,7 +73,7 @@ const AppContext = ( { children }: Props ) => {
         }
     }
 
-
+    // Metodo para agregar un platillo
     const addDish = (dish: any) => {
         if ( order ) {
             setOrder((prevState: any) => {
@@ -97,6 +98,7 @@ const AppContext = ( { children }: Props ) => {
         }
     }
 
+    // Metodo para eliminar los platillos
     const deleteDish = (dish: any) => {
         if ( order ) {
             setOrder((prevState: any) => {
@@ -114,6 +116,7 @@ const AppContext = ( { children }: Props ) => {
         }
     }
 
+    // Metodo para agregar un platillo 
     const setDish = (dish: any) => {
         if ( order ) {
             setOrder((prevState: any) => {
@@ -136,6 +139,7 @@ const AppContext = ( { children }: Props ) => {
         }
     }
 
+    // Metodo para cambiar la cantidad de un platillo
     const changeQuantity = (dish: any, type: '-' | '+') => {
         if ( order ) {
             setOrder((prevState: any) => {

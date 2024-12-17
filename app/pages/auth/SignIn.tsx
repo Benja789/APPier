@@ -25,6 +25,10 @@ const SignIn = () => {
             setMessage('El código de acceso es requerido');
             return;
         }
+        if ( code.length < 6 ) {
+            setMessage('El código de acceso debe ser de 6 caracteres');
+            return;
+        }
         setMessage('');
         let response:any = await apiPostData({
             url: ENV.API_URL + ENV.ENDPOINTS.auth,
@@ -68,7 +72,7 @@ const SignIn = () => {
 
     const onChangeText = (text: string) => {
         if ( text.length > 6 ) {
-            setMessage('El código de acceso no puede ser mayor a 4 caracteres');
+            setMessage('El código de acceso no puede ser mayor a 6 caracteres');
             return
         }
         setCode(text);

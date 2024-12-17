@@ -182,7 +182,15 @@ const ModalAddDish = (props: IModalAddDish) => {
                 }
                 <View style={{ marginVertical: 20 }}>
                     <Text style={[BaseStyles.textP]}>Notas: </Text>
-                    <TextInput style={[BaseStyles.inputText, BaseStyles.multiLineInput]} />
+                    <TextInput 
+                        style={[BaseStyles.inputText, BaseStyles.multiLineInput]} 
+                        value={dishOptions.notes}
+                        onChangeText={(e)=>{
+                            setDishOptions((prev: any)=>({
+                                ...prev,
+                                notes: e
+                            }))
+                        }}/>
                 </View>
                 <View style={[ModalAddDishStyles.titleModal]}>
                     <View style={[DishAddedStyles.containerButton, { width: "65%", marginTop: 0}]}>

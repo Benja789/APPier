@@ -208,7 +208,7 @@ const ListDishes = () => {
 
                 {/* Seccion del total de la orden */}
                 <View style={[ ListDishesStyles.detailsContainer ]}>
-                    <OrderDetails />
+                    <OrderDetails loader={loading}/>
                 </View>
             </View>
         </SafeAreaView>

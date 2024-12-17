@@ -3,7 +3,7 @@ import { BaseStyles } from "../../styles/BaseStyles"
 import Button from "../Base/Button"
 import { DishAddedStyles } from "../../styles/components/DishAddedStyles"
 import IconButton from "../Base/IconButton"
-import { useContext } from "react"
+import { useContext, useEffect } from "react"
 import { AppContextProvider } from "../../interfaces/IAppContext"
 
 interface IDishAddedProps {
@@ -43,8 +43,7 @@ const DishAdded = ( props: IDishAddedProps ) => {
                 <View style={{ width:"85%"}}>
                     <Text style={[BaseStyles.textTitleH3, { fontSize: 13 }]}>{ getLabel() }</Text>
                     <Text style={[BaseStyles.textP, { fontSize: 12 }]}>{ dish.description ?? "" }</Text>
-                    <Text style={[BaseStyles.textP, { fontSize: 12 }]}>${ appContext.formatedPrice(dish.price ?? 0) ?? "" }</Text>
-                    <Text style={[BaseStyles.textTitleH1, { fontSize: 12 }]}>${ appContext.formatedPrice(dish.totalLine ?? 0) ?? "" }</Text>
+                   
                 </View>
                 {
                     dish.status !== "delivered" &&
@@ -53,6 +52,14 @@ const DishAdded = ( props: IDishAddedProps ) => {
                             callBack={()=> deleteDish()}/>
                 }
             </View>
+
+            <View style={[ DishAddedStyles.notesBox]}>
+                <Text style={[BaseStyles.textTitleH1, { fontSize: 12 }]}>Notas</Text>
+                <Text>{ dish.notes !== "" ? dish.notes  : "No tiene notas" } </Text>
+            </View>
+            <Text style={[BaseStyles.textP, { fontSize: 12 }]}>${ appContext.formatedPrice(dish.price ?? 0) ?? "" }</Text>
+            <Text style={[BaseStyles.textTitleH1, { fontSize: 12 }]}>${ appContext.formatedPrice(dish.totalLine ?? 0) ?? "" }</Text>
+
             <View style={[ DishAddedStyles.containerButton ]}>
                 {
                     dish.canEdit ?
